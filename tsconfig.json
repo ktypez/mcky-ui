@@ -1,5 +1,4 @@
 {
-  "extends": "@sveltejs/kit/tsconfig",
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
@@ -9,6 +8,10 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "moduleResolution": "bundler"
-  }
+    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.svelte", "vite.config.ts"]
 }
