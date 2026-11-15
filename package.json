@@ -9,10 +9,18 @@
     "./core.css": "./src/styles/core.css",
     "./svelte": "./src/lib/index.ts"
   },
-  "scripts": { "check": "svelte-check --tsconfig ./tsconfig.json", "build": "vite build" },
+  "scripts": {
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "build": "vite build",
+    "dev": "vite --config vite.playground.config.ts",
+    "build:playground": "vite build --config vite.playground.config.ts"
+  },
   "peerDependencies": { "svelte": "^5.0.0" },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^5.0.0", "svelte": "^5.0.0",
-    "svelte-check": "^4.0.0", "typescript": "^5.7.0", "vite": "^6.0.0"
+    "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
   }
 }
