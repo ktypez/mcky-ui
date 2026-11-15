@@ -27,3 +27,23 @@ Strict black, white, and neutral gray. No warm-paper, matcha, coral, or indigo a
 ## Status
 
 Foundation specification is being established. Existing application styles are not replaced until each migration is reviewed and tested.
+
+
+## Playground
+
+Run the interactive V6 component preview locally:
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:4173/playground.html`. The playground includes monochrome tokens, typography samples, spacing/radius scales, component states, and light/dark switching.
+
+Production checks:
+
+```bash
+npm run check
+npm run build
+npm run build:playground
+```
