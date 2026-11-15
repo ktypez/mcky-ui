@@ -1,0 +1,36 @@
+:root {
+  color-scheme: light;
+  --ui-font-sans: "Inter", "Noto Sans Thai", system-ui, sans-serif;
+  --ui-font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --ui-white: #ffffff; --ui-black: #090909;
+  --ui-gray-25: #fcfcfc; --ui-gray-50: #f7f7f7; --ui-gray-100: #eeeeee;
+  --ui-gray-200: #dedede; --ui-gray-300: #c5c5c5; --ui-gray-400: #999999;
+  --ui-gray-500: #737373; --ui-gray-600: #555555; --ui-gray-700: #3d3d3d;
+  --ui-gray-800: #242424; --ui-gray-900: #141414;
+  --ui-bg: var(--ui-white); --ui-bg-subtle: var(--ui-gray-50); --ui-bg-muted: var(--ui-gray-100);
+  --ui-fg: var(--ui-black); --ui-fg-muted: var(--ui-gray-600); --ui-fg-subtle: var(--ui-gray-500);
+  --ui-border: var(--ui-gray-200); --ui-border-strong: var(--ui-gray-300);
+  --ui-inverse-bg: var(--ui-black); --ui-inverse-fg: var(--ui-white);
+  --ui-radius-sm: 6px; --ui-radius-md: 10px; --ui-radius-lg: 14px; --ui-radius-xl: 20px; --ui-radius-full: 999px;
+  --ui-space-1: 4px; --ui-space-2: 8px; --ui-space-3: 12px; --ui-space-4: 16px;
+  --ui-space-5: 20px; --ui-space-6: 24px; --ui-space-8: 32px; --ui-space-10: 40px;
+  --ui-space-12: 48px; --ui-space-16: 64px;
+  --ui-shadow-sm: 0 1px 2px rgb(0 0 0 / 5%); --ui-shadow-md: 0 4px 14px rgb(0 0 0 / 8%);
+  --ui-shadow-lg: 0 12px 32px rgb(0 0 0 / 12%);
+  --ui-duration-fast: 120ms; --ui-duration-normal: 180ms; --ui-duration-slow: 260ms;
+  --ui-ease: cubic-bezier(.2, .8, .2, 1); --ui-content-width: 1200px;
+}
+[data-theme="dark"], .ui-dark {
+  color-scheme: dark; --ui-bg: #0b0b0b; --ui-bg-subtle: #141414; --ui-bg-muted: #202020;
+  --ui-fg: #f7f7f7; --ui-fg-muted: #b0b0b0; --ui-fg-subtle: #888888;
+  --ui-border: #292929; --ui-border-strong: #414141; --ui-inverse-bg: #f7f7f7; --ui-inverse-fg: #090909;
+  --ui-shadow-sm: 0 1px 2px rgb(0 0 0 / 24%); --ui-shadow-md: 0 4px 14px rgb(0 0 0 / 28%);
+  --ui-shadow-lg: 0 12px 32px rgb(0 0 0 / 36%);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    color-scheme: dark; --ui-bg: #0b0b0b; --ui-bg-subtle: #141414; --ui-bg-muted: #202020;
+    --ui-fg: #f7f7f7; --ui-fg-muted: #b0b0b0; --ui-fg-subtle: #888888;
+    --ui-border: #292929; --ui-border-strong: #414141; --ui-inverse-bg: #f7f7f7; --ui-inverse-fg: #090909;
+  }
+}
