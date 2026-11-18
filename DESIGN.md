@@ -21,7 +21,7 @@ Set these attributes on the root element:
 ```
 
 - `data-palette`: `matcha` | `coral` | `blueberry` | `butter`
-- `data-mode`: `light` | `dark` (also supports `.dark` and `data-theme="dark"`)
+- `data-mode`: `light` | `dark` (also supports `.dark` and `data-theme="dark"`). If omitted, CSS-only consumers follow `prefers-color-scheme`; explicit values override the system.
 - `data-density`: `cozy` | `compact`
 - `data-texture`: `on` | `off`
 

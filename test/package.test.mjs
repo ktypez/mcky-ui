@@ -49,3 +49,13 @@ test('V5 typography provides a Thai fallback after Sora', async () => {
   const css = await read('../src/styles/v5-tokens.css');
   assert.match(css, /--font-ui:\s*"Sora",\s*"Noto Sans Thai"/);
 });
+
+
+test('V5 supports system dark mode when no explicit mode is set', async () => {
+  const css = await read('../src/styles/v5-tokens.css');
+  assert.match(css, /@media \(prefers-color-scheme: dark\)/);
+  assert.match(css, /:root:not\(\[data-mode\]\):not\(\[data-theme="light"\]\)/);
+  for (const palette of ['coral', 'blueberry', 'butter']) {
+    assert.ok(css.includes(`[data-palette="${palette}"]`), `missing auto-dark ${palette}`);
+  }
+});
