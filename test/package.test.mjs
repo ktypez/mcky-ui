@@ -59,3 +59,12 @@ test('V5 supports system dark mode when no explicit mode is set', async () => {
     assert.ok(css.includes(`[data-palette="${palette}"]`), `missing auto-dark ${palette}`);
   }
 });
+
+
+test('Button forwards standard HTML attributes with nullable Svelte element types', async () => {
+  const component = await read('../src/lib/components/Button.svelte');
+  assert.match(component, /Omit<HTMLButtonAttributes/);
+  assert.match(component, /disabled\?: boolean \| null/);
+  assert.match(component, /type=\{type \?\? "button"\}/);
+  assert.match(component, /\.\.\.rest/);
+});
