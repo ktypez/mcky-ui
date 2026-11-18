@@ -28,7 +28,7 @@
 <style>
   .ui-field { display: grid; gap: 6px; }
   .ui-field__label { color: var(--ui-fg-muted); font-size: 12px; font-weight: 600; }
-  .ui-select { width: 100%; min-height: 40px; padding: 8px 34px 8px 12px; border: 1px solid var(--ui-border-strong); border-radius: var(--ui-radius-md); background: var(--ui-bg); color: var(--ui-fg); font: inherit; }
+  .ui-select { width: 100%; min-height: 44px; padding: 10px 34px 10px 14px; border: 1.5px solid var(--rule-2); border-radius: var(--r2); background: var(--card); color: var(--ink); font: inherit; }
   .ui-select:focus-visible { outline: 2px solid var(--ui-fg); outline-offset: 2px; }
   .ui-select:disabled { opacity: .5; cursor: not-allowed; }
 </style>

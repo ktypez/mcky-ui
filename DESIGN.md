@@ -1,37 +1,54 @@
-# V6 Design Specification
+# V5 Paper Pop — Design Specification
 
-## Principles
-1. Monochrome only: black, white, and neutral gray. No warm-paper, matcha, coral, or indigo accents.
-2. Functional clarity over decoration. Use hierarchy, spacing, typography, and alignment rather than gradients.
-3. Mobile-first and responsive from 320px upward.
-4. Thai and English must both render cleanly. Applications may load Noto Sans Thai; the system stack remains the fallback.
-5. Accessible by default: keyboard operation, visible focus, semantic HTML, sufficient contrast, and reduced-motion support.
-6. Light and dark themes share semantic token names.
+mcky-ui is the shared V5 design system for the mcky.space ecosystem. V5 is the active target. Do not introduce V6 styling, layouts, or tokens in this package.
 
-## Surface language
-- White/light or near-black/dark page canvas.
-- Neutral gray for secondary surfaces and dividers.
-- Thin borders; shadows are optional and restrained.
-- Radius scale: 6 / 10 / 14 / 20px.
-- Motion is short and purposeful (120–260ms).
+## Visual language
 
-## Architecture
-- src/styles/tokens.css: raw and semantic design tokens.
-- src/styles/core.css: framework-independent reset and utility primitives.
-- src/lib: Svelte 5 components (`Badge`, `Button`, `Card`, `Checkbox`, `Input`, `Select`, `Switch`, `Textarea`); components must not own app data or API calls.
-- `.github/workflows/ci.yml`: type/accessibility diagnostics, unit checks, library and playground builds, and production dependency audit.
-- CSS core is consumable by static HTML without JavaScript.
+- Warm paper canvas (`--paper`) with a subtle dotted-paper texture; texture can be disabled with `data-texture="off"`.
+- Confident ink, warm card surfaces, fine paper rules, playful accent color, sticker borders, and offset hard shadows.
+- Four palettes: `matcha` (default), `coral`, `blueberry`, and `butter`.
+- Light and chalk-night dark modes, with the same semantic token names.
+- Sora + Noto Sans Thai for UI; JetBrains Mono for technical labels and numeric data.
+- Pill-shaped actions and chips; card radius 20px; sticker radius 14px; 1.5px ink outlines.
+- Small, purposeful hover/press movement. Respect `prefers-reduced-motion`.
 
-## Integration boundaries
-- ElysiaJS remains the backend/API layer and is not part of this UI package.
-- Do not move authentication, authorization, data contracts, or business logic into mcky-ui.
-- Preserve each app's routing, API contracts, PWA behavior, and persistence during visual migrations.
-- PORTAL React-to-Svelte migration is a separate app migration.
+## Theme contract
 
-## Migration order
-1. Establish tokens, CSS primitives, and component playground.
-2. Integrate DATA as the first Svelte consumer and validate themes and Thai/English.
-3. Migrate PORTAL to Svelte while preserving Clerk/auth flows.
-4. Integrate TRUCK, retaining Supabase contracts and PWA/update behavior.
-5. Update static mcky.space pages to consume core CSS only.
-6. Remove duplicated app-level tokens only after parity is verified.
+Set these attributes on the root element:
+
+```html
+<html data-palette="matcha" data-mode="light" data-density="cozy" data-texture="on">
+```
+
+- `data-palette`: `matcha` | `coral` | `blueberry` | `butter`
+- `data-mode`: `light` | `dark` (also supports `.dark` and `data-theme="dark"`)
+- `data-density`: `cozy` | `compact`
+- `data-texture`: `on` | `off`
+
+The theme can be changed at runtime by updating these attributes. Applications own persistence; mcky-ui does not write to localStorage or own application state.
+
+## Package architecture
+
+- `src/styles/v5-tokens.css`: canonical V5 semantic tokens and palette definitions.
+- `src/styles/tokens.css`: compatibility entry for token-only imports.
+- `src/styles/core.css`: reset, dotted paper canvas, shared primitives, focus and reduced-motion rules.
+- `src/lib/components`: Svelte 5 components; no app data, auth, routing, or API calls.
+- `playground/Playground.svelte`: responsive V5 reference surface and component catalogue.
+
+## Component principles
+
+- Native HTML semantics and keyboard behavior.
+- Minimum 44px interactive targets for primary controls.
+- Visible focus states and accessible labels.
+- Svelte 5 runes and typed props; controlled state remains with the consuming application.
+- Styling comes from shared V5 tokens and classes, not duplicated per-app palettes.
+
+## Navigation and layout reference
+
+V5 navigation is horizontal and top-aligned. Desktop uses a top bar with brand on the left, centered pill navigation, and theme/account actions on the right. Mobile keeps the top bar and places a horizontally scrollable pill navigation row immediately below it. There is no left navigation rail and no bottom navigation in the V5 reference shell. Content uses the available width rather than reserving sidebar space.
+
+## Out of scope
+
+- No V6 migration or V6 visual language.
+- No application routing, auth, persistence, business logic, or API contracts.
+- No framework dependency beyond Svelte as a peer dependency.

@@ -1,13 +1,15 @@
 # mcky-ui
 
-Shared monochrome design system for the mcky.space application family.
+Shared **V5 Paper Pop** design system for the mcky.space application family. V5 is the current target; this package does not ship V6 styling.
 
-## Package contents
+## V5 features
 
-- Framework-independent CSS tokens and core primitives.
-- Svelte 5 components: `Badge`, `Button`, `Card`, `Checkbox`, `Input`, `Select`, `Switch`, and `Textarea`.
-- Responsive V6 playground for reviewing foundations, components, and themes.
-- No runtime service, authentication, application data, or backend dependency.
+- Warm dotted-paper canvas, ink outlines, sticker surfaces, and offset hard shadows.
+- Four palettes: Matcha, Coral, Blueberry, and Butter.
+- Light and dark modes, cozy and compact density tokens, optional paper texture.
+- Svelte 5 components: Badge, Button, Card, Checkbox, Chip, CountSticker, EmptyState, Field, Input, Kbd, Monogram, Select, Segmented, Squiggle, Switch, Textarea, and TopBar.
+- Framework-independent CSS foundation for static sites and non-Svelte consumers.
+- Mobile-first, Thai/English-ready typography, keyboard accessibility, and reduced-motion support.
 
 ## Install
 
@@ -15,46 +17,50 @@ Shared monochrome design system for the mcky.space application family.
 npm install @mcky/ui svelte
 ```
 
-Import the CSS foundation once in the application entry point:
+Import the V5 foundation once in the application entry point:
 
 ```css
 @import '@mcky/ui/core.css';
 ```
 
-Or import only the design tokens:
+For tokens only:
 
 ```css
 @import '@mcky/ui/tokens.css';
 ```
 
-Use the Svelte components:
+Set the theme on the root element:
+
+```html
+<html data-palette="matcha" data-mode="light" data-density="cozy" data-texture="on">
+```
+
+Supported palettes are `matcha`, `coral`, `blueberry`, and `butter`. Set `data-mode="dark"` for chalk-night mode, `data-density="compact"` for denser rows, and `data-texture="off"` to remove the dotted paper texture. The package does not persist preferences; the consuming application owns that behavior.
+
+## Svelte usage
 
 ```svelte
 <script lang="ts">
-  import { Badge, Button, Card, Checkbox, Input, Select, Switch, Textarea } from '@mcky/ui/svelte';
-
+  import { Badge, Button, Card, Chip, Input, Segmented, Switch, TopBar } from '@mcky/ui/svelte';
   let email = $state('');
-  let accepted = $state(false);
-  let notifications = $state(true);
-  let category = $state('design');
-  let notes = $state('');
+  let palette = $state('matcha');
+  let enabled = $state(true);
 </script>
 
 <Card>
   <Badge tone="solid">Active</Badge>
-  <Input label="Email" type="email" bind:value={email} required />
-  <Select label="Category" bind:value={category} options={[
-    { label: 'Design', value: 'design' },
-    { label: 'Engineering', value: 'engineering' }
+  <Input label="Email" type="email" bind:value={email} />
+  <Chip tone="acc" pressed>Selected</Chip>
+  <Segmented bind:value={palette} options={[
+    { label: 'Matcha', value: 'matcha' },
+    { label: 'Coral', value: 'coral' }
   ]} />
-  <Textarea label="Notes" bind:value={notes} />
-  <Checkbox label="I agree" bind:checked={accepted} />
-  <Switch label="Notifications" bind:checked={notifications} />
-  <Button variant="primary" disabled={!accepted}>Continue</Button>
+  <Switch label="Notifications" bind:checked={enabled} />
+  <Button variant="primary">Continue</Button>
 </Card>
 ```
 
-All form controls support native keyboard interaction and form attributes. Inputs, selects, textareas, checkboxes, and switches support Svelte 5 two-way binding.
+`TopBar` provides the V5 horizontal navigation pattern: desktop brand / centered pills / actions, then a horizontally scrollable navigation row on mobile.
 
 ## Development
 
@@ -63,7 +69,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:4173/playground.html`.
+Open `http://localhost:4173/playground.html` to inspect the V5 reference and interact with palette, mode, and texture controls.
 
 ## Verification
 
@@ -75,19 +81,8 @@ npm run build:playground
 npm run audit:runtime
 ```
 
-`npm run audit:runtime` audits production dependencies. The current development toolchain includes `picomatch` through Vite's `tinyglobby` dependency. GitHub advisory [GHSA-fc5q-39xc-vjpf](https://github.com/advisories/GHSA-fc5q-39xc-vjpf) currently has no published fixed npm release (latest registry version is 4.0.7). The affected package is development/build tooling only; no production dependency includes it. Avoid accepting untrusted glob patterns in build configuration and recheck the full audit when upstream publishes a fix or changes the advisory.
-
-## Design direction
-
-Strict black, white, and neutral gray. Mobile-first, accessible, Thai/English typography, explicit light/dark themes, restrained borders and radii, and reduced-motion support. See [DESIGN.md](./DESIGN.md).
+See [DESIGN.md](./DESIGN.md) for the V5 specification and [SECURITY.md](./SECURITY.md) for dependency advisory notes.
 
 ## Application integration
 
-| Application | Integration target | Migration state |
-| --- | --- | --- |
-| DATA | Svelte 5 components + core CSS | Pending |
-| TRUCK | Svelte 5 components + core CSS | Pending |
-| PORTAL | Svelte migration; preserve auth/API behavior | Pending |
-| mcky.space | Static HTML + core CSS only | Pending |
-
-Application migrations remain separate changes and must preserve routing, authentication, API contracts, persistence, and PWA/update behavior.
+mcky-ui provides shared presentation primitives only. DATA, TRUCK, PORTAL, and mcky.space integrations remain separate migrations and must preserve each application's routing, authentication, API contracts, persistence, and PWA behavior.

@@ -20,7 +20,7 @@
 </label>
 
 <style>
-  .ui-check { display: inline-flex; align-items: center; gap: 9px; color: var(--ui-fg); cursor: pointer; }
-  .ui-check__control { width: 16px; height: 16px; margin: 0; accent-color: var(--ui-fg); }
+  .ui-check { display: inline-flex; align-items: center; min-height: 44px; padding-block: 4px; gap: 9px; color: var(--ink); cursor: pointer; }
+  .ui-check__control { width: 16px; height: 16px; margin: 0; accent-color: var(--acc); }
   .ui-check--disabled { opacity: .5; cursor: not-allowed; }
 </style>
