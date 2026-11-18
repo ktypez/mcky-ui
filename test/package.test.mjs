@@ -29,3 +29,11 @@ test('design tokens provide semantic light and dark theme values', async () => {
   assert.match(css, /data-density=\"compact\"/);
   for (const palette of ['matcha', 'coral', 'blueberry', 'butter']) assert.ok(css.includes(`data-palette=\"${palette}\"`), `missing ${palette} palette`);
 });
+
+
+test('V5 tokens cover static-site motion and reading-measure contracts', async () => {
+  const css = await read('../src/styles/v5-tokens.css');
+  for (const token of ['--ease:', '--measure:', '--motion-fast:', '--motion-normal:', '--motion-slow:']) {
+    assert.ok(css.includes(token), `missing ${token}`);
+  }
+});

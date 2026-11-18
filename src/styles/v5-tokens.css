@@ -20,6 +20,13 @@
   --rowh: 58px;
   --pad-card: 20px;
 
+  /* shared motion and reading measure */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --measure: 66ch;
+  --motion-fast: 160ms;
+  --motion-normal: 200ms;
+  --motion-slow: 300ms;
+
   /* confetti (fixed brights, work in both modes) */
   --banana: #f2b63d;
   --sky: #57a7e0;
