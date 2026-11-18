@@ -7,7 +7,7 @@
 
 :root {
   /* type */
-  --font-ui: "Sora", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-ui: "Sora", "Noto Sans Thai", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* radii */
