@@ -37,3 +37,15 @@ test('V5 tokens cover static-site motion and reading-measure contracts', async (
     assert.ok(css.includes(token), `missing ${token}`);
   }
 });
+
+
+test('framework peer is optional for CSS-only consumers', async () => {
+  const pkg = JSON.parse(await read('../package.json'));
+  assert.equal(pkg.peerDependencies.svelte, '^5.0.0');
+  assert.equal(pkg.peerDependenciesMeta.svelte.optional, true);
+});
+
+test('V5 typography provides a Thai fallback after Sora', async () => {
+  const css = await read('../src/styles/v5-tokens.css');
+  assert.match(css, /--font-ui:\s*"Sora",\s*"Noto Sans Thai"/);
+});
