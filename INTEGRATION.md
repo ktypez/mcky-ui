@@ -23,7 +23,7 @@ information architecture intact.
 | `data.mcky.space` (`data-ledger`) | Svelte 5, Tailwind 4 | Most complete V5 reference; tokens, four palettes, light/dark, density, UI primitives | Reference implementation for token parity. Keep DATA navigation, maps, forms, and business workflows. |
 | `truck` | Svelte 5 | LEDGER Paper Pop theme, generated palette CSS, theme picker and theme loader | Add a token adapter first. Preserve the Truck theme system, bottom navigation, calendar, finance and operational screens. |
 | `collage` | SvelteKit / Svelte 5 | Paper Pop tokens, texture, controls and card patterns | Share common primitives; preserve Canvas Renderer, photo workflow, collage-specific controls and output composition. |
-| `portal` | React 19 | V5 token/UI CSS mixed with legacy V3 styles | CSS/token alignment can precede framework migration. Do not import Svelte components into React. Remove V3 residue only after reviewing its live dependencies. |
+| `portal` | Svelte 5 | Canonical V5 tokens, shared Button, ClerkJS Core 3 through the shared FAPI | Keep sign-in, profile, LINE, access-management and account-routing workflows Portal-specific. |
 | `mcky.space` | Static multi-page Vite HTML/CSS, no client JS | V5 Paper Pop CSS, self-hosted fonts, strict CSP, matcha/coral product accents | Consume framework-neutral tokens/core CSS only. Preserve zero inline scripts/styles, CSP, static routes and the portfolio/case-study structure. |
 
 ## Shared component candidates
@@ -64,8 +64,8 @@ states. App-specific orchestration remains in the application.
 3. Truck: add an explicit LEDGER-to-V5 adapter, then migrate generic controls.
 4. mcky.space: switch its duplicated base tokens to the CSS-only V5 entry while
    retaining its CSP, self-hosted fonts, matcha/coral accents, and static pages.
-5. Portal: align CSS tokens and retire legacy V3 dependencies; adopt Svelte
-   components only after the planned React-to-Svelte 5 migration.
+5. Portal: align CSS tokens, migrate to Svelte 5 and adopt shared primitives
+   only where their behavior matches; keep Clerk and account workflows local.
 
 ## Safety and change discipline
 
@@ -84,21 +84,24 @@ The first V5 integration pass is merged across all five applications:
 | DATA | Canonical tokens, palette/mode/density adapter, shared core styles | Button, CountSticker | Badge/payment states, Chip, Field/Input tracking, Monogram, Segmented controls, TopBar, maps and business flows |
 | Collage | Canonical tokens, system mode resolved before paint, shared core styles | Button for Studio and download actions | Canvas Renderer, DatePicker, ThemePicker, FileDrop, PhotoGrid and output themes |
 | Truck | Canonical tokens mapped into LEDGER aliases; legacy theme fallbacks scoped away from LEDGER | Button for ConfirmModal and UpdatePrompt actions | Theme loader/picker, BottomNav, calendar, finance, offline/PWA and operational screens |
-| Portal | Canonical tokens and V5 Clerk appearance adapter | CSS only | React 19 panels/auth/routing; shared Svelte components wait for the planned React-to-Svelte 5 migration |
+| Portal | Canonical V5 tokens, system mode from shared CSS, Svelte 5 + ClerkJS | Button | Sign-in, profile, LINE and access-management workflows remain Portal-specific |
 | mcky.space | CSS-only canonical tokens; omitted `data-mode` follows system preference | CSS only | Static pages, self-hosted fonts, case-study layout, strict CSP and standalone 404 stylesheet |
 
 All applications retain their own information architecture and navigation. The
 shared package is the source of visual tokens and low-level primitives, not an
 application shell or a replacement for domain components.
 
-## Follow-up sequence
+## Remaining V5 hardening
 
-1. Migrate Portal from React 19 to Svelte 5 as previously agreed, then adopt the
-   shared Svelte primitives where their interaction contracts match.
-2. Continue migrating repeated generic controls in DATA, Collage and Truck only
-   when the existing component API and accessibility behavior can be preserved.
-3. Keep the Truck splash-screen edits in the user's local Git stash separate
-   from the newer upstream mascot splash implementation until that variant is
-   reviewed and deliberately reconciled.
+1. Evaluate repeated generic controls in DATA, Collage, Truck and Portal; move only controls whose interaction and accessibility contracts match a shared primitive.
+2. Complete deployed mobile, light-mode and dark-mode checks while keeping each application navigation, maps, canvas, offline/PWA and authentication flows local.
+3. Reconcile separately preserved Truck splash-screen edits only after reviewing the current upstream mascot implementation.
+
+## Phase completion criteria
+
+- All five applications consume the immutable V5 token package or its CSS-only entry.
+- Framework apps use direct shared-component subpaths where behavior matches; static `mcky.space` remains JavaScript-free and consumes tokens only.
+- Per-repository tests, typechecks, builds and production dependency audits are run on Instabox, not on the mobile Lab.
+- No V6 assets, tokens or variants are introduced during this phase.
 
 V6 remains paused. V5 is the only active design-system target.
