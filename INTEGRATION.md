@@ -74,3 +74,31 @@ states. App-specific orchestration remains in the application.
 - Do not migrate domain components merely to reduce file count.
 - Validate each consumer with its own typecheck/build/tests before continuing.
 - Keep V5 as the only design target; no V6 files, tokens, or variants.
+
+## Current adoption status
+
+The first V5 integration pass is merged across all five applications:
+
+| Repository | Shared V5 adoption | Components adopted | Kept application-specific |
+| --- | --- | --- | --- |
+| DATA | Canonical tokens, palette/mode/density adapter, shared core styles | Button, CountSticker | Badge/payment states, Chip, Field/Input tracking, Monogram, Segmented controls, TopBar, maps and business flows |
+| Collage | Canonical tokens, system mode resolved before paint, shared core styles | Button for Studio and download actions | Canvas Renderer, DatePicker, ThemePicker, FileDrop, PhotoGrid and output themes |
+| Truck | Canonical tokens mapped into LEDGER aliases; legacy theme fallbacks scoped away from LEDGER | Button for ConfirmModal and UpdatePrompt actions | Theme loader/picker, BottomNav, calendar, finance, offline/PWA and operational screens |
+| Portal | Canonical tokens and V5 Clerk appearance adapter | CSS only | React 19 panels/auth/routing; shared Svelte components wait for the planned React-to-Svelte 5 migration |
+| mcky.space | CSS-only canonical tokens; omitted `data-mode` follows system preference | CSS only | Static pages, self-hosted fonts, case-study layout, strict CSP and standalone 404 stylesheet |
+
+All applications retain their own information architecture and navigation. The
+shared package is the source of visual tokens and low-level primitives, not an
+application shell or a replacement for domain components.
+
+## Follow-up sequence
+
+1. Migrate Portal from React 19 to Svelte 5 as previously agreed, then adopt the
+   shared Svelte primitives where their interaction contracts match.
+2. Continue migrating repeated generic controls in DATA, Collage and Truck only
+   when the existing component API and accessibility behavior can be preserved.
+3. Keep the Truck splash-screen edits in the user's local Git stash separate
+   from the newer upstream mascot splash implementation until that variant is
+   reviewed and deliberately reconciled.
+
+V6 remains paused. V5 is the only active design-system target.
