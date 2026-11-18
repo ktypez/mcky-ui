@@ -1,16 +1,20 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  let { variant = "secondary", type = "button", disabled = false, onclick, children, class: className = "", ...rest }: {
+  import type { HTMLButtonAttributes } from "svelte/elements";
+
+  type ButtonProps = Omit<HTMLButtonAttributes, "type" | "disabled" | "onclick" | "class"> & {
     variant?: "primary" | "secondary" | "ghost" | "pop" | "danger";
-    type?: "button" | "submit" | "reset";
-    disabled?: boolean;
-    onclick?: (event: MouseEvent) => void;
+    type?: HTMLButtonAttributes["type"];
+    disabled?: boolean | null;
+    onclick?: HTMLButtonAttributes["onclick"];
     children?: Snippet;
     class?: string;
-  } = $props();
+  };
+
+  let { variant = "secondary", type = "button", disabled = false, onclick, children, class: className = "", ...rest }: ButtonProps = $props();
 </script>
 
-<button class={["ui-button", variant === "primary" && "ui-button--primary", variant === "ghost" && "ui-button--ghost", variant === "pop" && "btn-pop", variant === "danger" && "btn-danger", className].filter(Boolean).join(" ")} {type} {disabled} {onclick} {...rest}>
+<button class={["ui-button", variant === "primary" && "ui-button--primary", variant === "ghost" && "ui-button--ghost", variant === "pop" && "btn-pop", variant === "danger" && "btn-danger", className].filter(Boolean).join(" ")} type={type ?? "button"} disabled={disabled ?? false} onclick={onclick ?? undefined} {...rest}>
   {@render children?.()}
 </button>
 
