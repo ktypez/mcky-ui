@@ -18,7 +18,8 @@
 ## Architecture
 - src/styles/tokens.css: raw and semantic design tokens.
 - src/styles/core.css: framework-independent reset and utility primitives.
-- src/lib: Svelte 5 components; components must not own app data or API calls.
+- src/lib: Svelte 5 components (`Badge`, `Button`, `Card`, `Checkbox`, `Input`, `Select`, `Switch`, `Textarea`); components must not own app data or API calls.
+- `.github/workflows/ci.yml`: type/accessibility diagnostics, unit checks, library and playground builds, and production dependency audit.
 - CSS core is consumable by static HTML without JavaScript.
 
 ## Integration boundaries
