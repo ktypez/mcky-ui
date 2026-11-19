@@ -41,8 +41,9 @@ Legend: `[x]` verified complete, `[ ]` not yet verified, `[!]` blocked or requir
 - [x] Confirm V5 Paper Pop is the only active design target; V6 stays paused.
 - [x] Confirm execution policy: Simular Box for heavy work; no builds/tests/audits on Lab; do not use Instabox.
 - [x] Confirm five target repositories and app-specific boundaries in INTEGRATION.md.
-- [ ] Record current default-branch commit SHA for each repository.
-- [ ] Confirm all working trees are clean before starting each repository; preserve unrelated changes.
+- [x] Record current default-branch commit SHA for each repository (2026-11-19): mcky-ui `10dcd8ef86f65840fbbb4ebcb558cb3ab6121503`; DATA `1c1164cb028dd1834c1b42474ef9c8cba07dc4a7`; Collage `35521e75f33b5dd25033a2ca55d3053bd158b96a`; TRUCK `93cc751333b5d162796acc9abc063500310f643a`; PORTAL `9465c336c5cbcf7942c64d4cf7e110029f941e45`; mcky.space `814d0847a1120daece0ab45c6a1aa4c15e4be7a0` (default branch `master`).
+- [x] Confirm clean isolated audit worktrees for mcky-ui, DATA and Collage. Existing working copies were preserved; mcky-ui's original `main` copy was already one commit ahead and was not modified. DATA's original copy remained on its existing feature branch and was not modified.
+- [!] TRUCK, PORTAL and mcky.space default-branch SHAs were recorded through GitHub, but Simular Box cannot clone these private repositories because no Git credentials are available in the Box. Runner validation is blocked until secure repository access is provided.
 - [ ] Record current production deployment URL and deployed commit for each app.
 
 ### Phase 1 — Shared component and token hardening
@@ -58,6 +59,18 @@ For each app, inventory repeated controls and compare semantics, keyboard behavi
 - [ ] Make only evidence-backed changes; each app change gets its own focused PR and validation.
 
 ### Phase 2 — Fresh repository validation
+
+**Initial validation results (2026-11-19):**
+
+| Repository | Commit | Install | Typecheck | Tests | Build | Runtime audit | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| mcky-ui | `10dcd8e` | Pass (`npm ci`) | Pass (0 errors, 0 warnings) | Pass (9/9) | Pass (package + playground) | Pass (0 vulnerabilities) | Complete for this commit. |
+| DATA | `1c1164c` | Pass (`pnpm install --frozen-lockfile`) | Pass (0 errors, 0 warnings) | Pass (142/142) | Pass | Pass (`pnpm audit --prod`, no known vulnerabilities) | Lint pass. `check:pwa` script could not run because the Box image lacks the system `file` utility; PNG signatures and dimensions were independently verified (192, 512, 512). Install the utility or update the script to use a Node-native PNG check, then rerun. Existing build warnings: large Clerk chunk and open-location-code mixed static/dynamic import. |
+| Collage | `35521e7` | Pass (`bun install --frozen-lockfile`) | Pass (0 errors, 0 warnings) | Pass (33/33) | Pass | Pass (0 vulnerabilities) | No lint script is defined in the app package. |
+| TRUCK | `93cc751` | Blocked | Blocked | Blocked | Blocked | Blocked | Private repo clone requires Git credentials in Simular Box. |
+| PORTAL | `9465c33` | Blocked | Blocked | Blocked | Blocked | Blocked | Private repo clone requires Git credentials in Simular Box. |
+| mcky.space | `814d084` | Blocked | Blocked | Blocked | Blocked | Blocked | Private repo clone requires Git credentials in Simular Box. |
+
 
 Run on Simular Box against the exact current main revision (or a dedicated PR branch). Capture command output and commit SHA.
 
@@ -116,7 +129,9 @@ Test production deployments at 360, 375, 390 and 414 CSS px. Capture screenshots
 
 | Date | Repository / phase | Result | Evidence / notes |
 | --- | --- | --- | --- |
-| 2026-11-19 | Plan created | In progress | Tracking checklist established; execution begins with baseline inventory. |
+| 2026-11-19 | Plan created | In progress | PR #15 opened; checklist tracked in this file. |
+| 2026-11-19 | Phase 0 baseline | Partial | All six default-branch SHAs recorded. Three isolated worktrees clean. Private repo runner access and deployed revision inventory remain blocked/pending. |
+| 2026-11-19 | Phase 2 initial validation | 3/6 repositories tested | mcky-ui all gates pass; DATA passes install/typecheck/tests/build/lint/runtime audit with PWA script environment issue; Collage passes install/check/tests/build/runtime audit. TRUCK, PORTAL and mcky.space blocked by private Git clone authentication in Box. |
 
 ## Decision and safety rules
 
