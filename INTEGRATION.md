@@ -16,6 +16,14 @@ information architecture intact.
   because two applications have similarly named files; behavior and semantics
   must match first.
 
+## Execution workflow
+
+- ChatGPT coordinates the work: scope changes, prepare implementation plans, review diffs and results. The user retains approval for merges and production changes.
+- GitHub is the source of truth for branches, commits, pull requests and CI status. The Lab may keep working copies and act as a lightweight control endpoint.
+- Lab (Poco F1 + Mobian) is for repository access and lightweight coordination only. Do not run dependency installs, test suites, builds, audits or sustained CPU/RAM workloads there.
+- Simular Box is the execution environment for repository work that needs a full machine: dependency installs, typechecks, tests, builds, audits, browser automation and responsive visual QA. Use the existing `main` box by default; create additional boxes when isolation or parallel work justifies them. Save and synchronize changes through GitHub.
+- Instabox is not part of this workflow. Do not wake, configure or use Instabox as a runner.
+
 ## Repository audit
 
 | Repository | Runtime | Existing V5 material | Integration boundary |
@@ -101,7 +109,7 @@ application shell or a replacement for domain components.
 
 - All five applications consume the immutable V5 token package or its CSS-only entry.
 - Framework apps use direct shared-component subpaths where behavior matches; static `mcky.space` remains JavaScript-free and consumes tokens only.
-- Per-repository tests, typechecks, builds and production dependency audits are run on Instabox, not on the mobile Lab.
+- Per-repository tests, typechecks, builds and production dependency audits run in Simular Box, never on the mobile Lab.
 - No V6 assets, tokens or variants are introduced during this phase.
 
 V6 remains paused. V5 is the only active design-system target.
