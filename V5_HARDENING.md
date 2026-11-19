@@ -50,8 +50,9 @@ Legend: `[x]` verified complete, `[ ]` not yet verified, `[!]` blocked or requir
 
 For each app, inventory repeated controls and compare semantics, keyboard behavior, focus handling, validation, disabled/loading states, responsive behavior, and accessibility before proposing extraction.
 
-- [ ] DATA: audit Button, Badge/Chip, Field/Input, Textarea, Select, Checkbox/Switch, Segmented, Monogram, CountSticker, EmptyState, Dialog and Toast usage.
-- [ ] Collage: audit Button, Card, Badge, Field/Input, Select, Segmented, DatePicker, FileDrop, Tabs and EmptyState usage; keep canvas/photo workflow local.
+- [x] DATA: initial source-level disposition completed for local Badge, Chip, Field, Input, Segmented, Monogram, AppDialog and Toaster. Keep payment Badge, Field, tracked Input wrapper, compound Seg/SegItem, Monogram, multi-mode AppDialog and action-aware Toaster local for now: their semantics/contracts differ from the shared primitives. DATA already consumes shared Button and CountSticker. Chip is a possible candidate, but its current count type permits strings while shared Chip accepts numbers; inspect call sites before any replacement.
+- [x] Collage: initial source-level inventory completed. DatePicker, FileDrop, PhotoGrid and ThemePicker are product/workflow-specific and have no exact shared contract; keep local. Shared Button is already used in Studio and the download action; V5 core CSS is imported once.
+- [ ] Complete call-site-level compatibility review for DATA Chip and all remaining repeated controls before approving any extraction.
 - [ ] TRUCK: audit generic buttons, fields, dialogs/confirmations, status badges, tabs and loading states; keep BottomNav, calendar, finance, offline sync and operational screens local.
 - [ ] PORTAL: audit buttons, fields, alerts, dialogs, tabs, status/loading and toast presentation; keep Clerk, LINE, profile and access-management orchestration local.
 - [ ] mcky.space: verify CSS-only token consumption, static routes, self-hosted fonts and CSP; do not add a JS component runtime.
@@ -132,6 +133,7 @@ Test production deployments at 360, 375, 390 and 414 CSS px. Capture screenshots
 | 2026-11-19 | Plan created | In progress | PR #15 opened; checklist tracked in this file. |
 | 2026-11-19 | Phase 0 baseline | Partial | All six default-branch SHAs recorded. Three isolated worktrees clean. Private repo runner access and deployed revision inventory remain blocked/pending. |
 | 2026-11-19 | Phase 2 initial validation | 3/6 repositories tested | mcky-ui all gates pass; DATA passes install/typecheck/tests/build/lint/runtime audit with PWA script environment issue; Collage passes install/check/tests/build/runtime audit. TRUCK, PORTAL and mcky.space blocked by private Git clone authentication in Box. |
+| 2026-11-19 | Phase 1 initial component audit | DATA + Collage initial disposition | DATA's payment/status and form-tracking wrappers remain local; Chip needs call-site review. Collage DatePicker/FileDrop/PhotoGrid/ThemePicker remain local; shared Button adoption confirmed. No app code changed. |
 
 ## Decision and safety rules
 
