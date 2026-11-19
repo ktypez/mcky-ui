@@ -16,6 +16,14 @@ information architecture intact.
   because two applications have similarly named files; behavior and semantics
   must match first.
 
+## Execution workflow
+
+- ChatGPT coordinates the work: scope changes, prepare implementation plans, review diffs and results. The user retains approval for merges and production changes.
+- GitHub is the source of truth for branches, commits, pull requests and CI status. The Lab may keep working copies and act as a lightweight control endpoint.
+- Lab (Poco F1 + Mobian) is for repository access and lightweight coordination only. Do not run dependency installs, test suites, builds, audits or sustained CPU/RAM workloads there.
+- Simular Box is the execution environment for repository work that needs a full machine: dependency installs, typechecks, tests, builds, audits, browser automation and responsive visual QA. Use the existing `main` box by default; create additional boxes when isolation or parallel work justifies them. Save and synchronize changes through GitHub.
+- Instabox is not part of this workflow. Do not wake, configure or use Instabox as a runner.
+
 ## Repository audit
 
 | Repository | Runtime | Existing V5 material | Integration boundary |
@@ -91,6 +99,19 @@ All applications retain their own information architecture and navigation. The
 shared package is the source of visual tokens and low-level primitives, not an
 application shell or a replacement for domain components.
 
+## Deployed mobile QA checkpoint — 2026-11-19
+
+Initial responsive checks were run in Simular Box at 360, 375, 390 and 414 CSS px:
+
+| Application | Result | Notes |
+| --- | --- | --- |
+| DATA (`data.mcky.space`) | Pass | No document-level horizontal overflow; light layout inspected; explicit dark-mode toggle works. |
+| TRUCK (`truck.mcky.space`) | Pass with fix pending | No document-level horizontal overflow. Found missing Thai glyphs in the mono eyebrow because the font stack reached generic monospace before Noto Sans Thai; fix is proposed in [TRUCK PR #28](https://github.com/ktypez/truck/pull/28). |
+| PORTAL (`me.mcky.space`) | Pass | No horizontal overflow; form inputs remain 16px and primary actions meet 44px height. |
+| Collage (`report.mcky.space`) | Pass | No horizontal overflow; style controls remain at least 56px high. |
+| mcky.space | Pass | No document-level horizontal overflow; long install snippets scroll inside their own code blocks. |
+
+Scope: this checkpoint covers public landing, sign-in, or unauthenticated application surfaces only. Authenticated Truck and Portal workflows, and dark-mode parity outside DATA, still need a separate pass. The TRUCK font fix is not live until its PR is merged and deployed.
 ## Remaining V5 hardening
 
 1. Evaluate repeated generic controls in DATA, Collage, Truck and Portal; move only controls whose interaction and accessibility contracts match a shared primitive.
@@ -101,7 +122,7 @@ application shell or a replacement for domain components.
 
 - All five applications consume the immutable V5 token package or its CSS-only entry.
 - Framework apps use direct shared-component subpaths where behavior matches; static `mcky.space` remains JavaScript-free and consumes tokens only.
-- Per-repository tests, typechecks, builds and production dependency audits are run on Instabox, not on the mobile Lab.
+- Per-repository tests, typechecks, builds and production dependency audits run in Simular Box, never on the mobile Lab.
 - No V6 assets, tokens or variants are introduced during this phase.
 
 V6 remains paused. V5 is the only active design-system target.
