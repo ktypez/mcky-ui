@@ -99,6 +99,19 @@ All applications retain their own information architecture and navigation. The
 shared package is the source of visual tokens and low-level primitives, not an
 application shell or a replacement for domain components.
 
+## Deployed mobile QA checkpoint — 2026-11-19
+
+Initial responsive checks were run in Simular Box at 360, 375, 390 and 414 CSS px:
+
+| Application | Result | Notes |
+| --- | --- | --- |
+| DATA (`data.mcky.space`) | Pass | No document-level horizontal overflow; light layout inspected; explicit dark-mode toggle works. |
+| TRUCK (`truck.mcky.space`) | Pass with fix pending | No document-level horizontal overflow. Found missing Thai glyphs in the mono eyebrow because the font stack reached generic monospace before Noto Sans Thai; fix is proposed in [TRUCK PR #28](https://github.com/ktypez/truck/pull/28). |
+| PORTAL (`me.mcky.space`) | Pass | No horizontal overflow; form inputs remain 16px and primary actions meet 44px height. |
+| Collage (`report.mcky.space`) | Pass | No horizontal overflow; style controls remain at least 56px high. |
+| mcky.space | Pass | No document-level horizontal overflow; long install snippets scroll inside their own code blocks. |
+
+Scope: this checkpoint covers public landing, sign-in, or unauthenticated application surfaces only. Authenticated Truck and Portal workflows, and dark-mode parity outside DATA, still need a separate pass. The TRUCK font fix is not live until its PR is merged and deployed.
 ## Remaining V5 hardening
 
 1. Evaluate repeated generic controls in DATA, Collage, Truck and Portal; move only controls whose interaction and accessibility contracts match a shared primitive.
