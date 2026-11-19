@@ -1,0 +1,61 @@
+/* MCKY UI V6 — Work Shell foundation. V5 remains available and unchanged. */
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --mcky-v6-sky: #9DD2F7;
+  --mcky-v6-cream: #F8F6F0;
+  --mcky-v6-paper: #FFFFFF;
+  --mcky-v6-ink: #111111;
+  --mcky-v6-muted: #4A4A4A;
+  --mcky-v6-subtle: #7A7A7A;
+  --mcky-v6-yellow: #FFD21F;
+  --mcky-v6-blue: #4D83FF;
+  --mcky-v6-purple: #8B73E8;
+  --mcky-v6-orange: #F47B20;
+  --mcky-v6-red: #E34E4E;
+  --mcky-v6-font-display: 'Space Grotesk', 'Sarabun', system-ui, sans-serif;
+  --mcky-v6-font-body: 'Sarabun', system-ui, sans-serif;
+  --mcky-v6-font-mono: 'DM Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --mcky-v6-radius: 20px;
+  --mcky-v6-radius-sm: 12px;
+  --mcky-v6-outline: 2.5px solid var(--mcky-v6-ink);
+  --mcky-v6-shadow: 5px 5px 0 var(--mcky-v6-ink);
+  --mcky-v6-shadow-sm: 3px 3px 0 var(--mcky-v6-ink);
+}
+
+.mcky-v6-shell {
+  color: var(--mcky-v6-ink);
+  background: var(--mcky-v6-sky);
+  border: var(--mcky-v6-outline);
+  border-radius: var(--mcky-v6-radius);
+  box-shadow: var(--mcky-v6-shadow);
+  font-family: var(--mcky-v6-font-body);
+}
+.mcky-v6-frame {
+  background: var(--mcky-v6-paper);
+  border: var(--mcky-v6-outline);
+  border-radius: var(--mcky-v6-radius);
+  overflow: clip;
+}
+.mcky-v6-card {
+  background: var(--mcky-v6-paper);
+  border: var(--mcky-v6-outline);
+  border-radius: 16px;
+  box-shadow: var(--mcky-v6-shadow-sm);
+}
+.mcky-v6-button {
+  min-height: 40px;
+  padding: 9px 14px;
+  color: var(--mcky-v6-ink);
+  background: var(--mcky-v6-yellow);
+  border: var(--mcky-v6-outline);
+  border-radius: var(--mcky-v6-radius-sm);
+  box-shadow: var(--mcky-v6-shadow-sm);
+  font: 700 0.8rem var(--mcky-v6-font-display);
+}
+.mcky-v6-button:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--mcky-v6-ink); }
+.mcky-v6-label {
+  font: 500 0.68rem var(--mcky-v6-font-mono);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
