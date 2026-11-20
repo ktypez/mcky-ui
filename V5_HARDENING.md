@@ -3,7 +3,7 @@
 **Status date:** 2026-11-19  
 **Phase:** V5 Paper Pop hardening and closure  
 **Design target:** V5 only. V6 remains paused.  
-**Execution:** Simular Box `main`; GitHub is the source of truth. Lab is lightweight coordination only. Instabox is excluded.
+**Execution (updated 2026-11-20):** GitHub is the source of truth. SentinelX-connected Lab is for lightweight repository inspection and coordination only; do not run installs, builds, tests, audits, or sustained workloads there. Simular Box VM is paused/retired due to reliability issues. Instabox is excluded. Heavy validation remains blocked until an approved reliable runner is available.
 
 ## Goal
 
@@ -39,9 +39,9 @@ Legend: `[x]` verified complete, `[ ]` not yet verified, `[!]` blocked or requir
 ### Phase 0 — Freeze scope and establish baseline
 
 - [x] Confirm V5 Paper Pop is the only active design target; V6 stays paused.
-- [x] Confirm execution policy: Simular Box for heavy work; no builds/tests/audits on Lab; do not use Instabox.
+- [x] Confirm execution policy: SentinelX/Lab for lightweight coordination only; no heavy work on Lab; Simular Box VM paused due to hangs; Instabox excluded.
 - [x] Confirm five target repositories and app-specific boundaries in INTEGRATION.md.
-- [x] Record current default-branch commit SHA for each repository (2026-11-19): mcky-ui `10dcd8ef86f65840fbbb4ebcb558cb3ab6121503`; DATA `1c1164cb028dd1834c1b42474ef9c8cba07dc4a7`; Collage `35521e75f33b5dd25033a2ca55d3053bd158b96a`; TRUCK `93cc751333b5d162796acc9abc063500310f643a`; PORTAL `9465c336c5cbcf7942c64d4cf7e110029f941e45`; mcky.space `814d0847a1120daece0ab45c6a1aa4c15e4be7a0` (default branch `master`).
+- [x] Record current default-branch commit SHA for each repository (refreshed 2026-11-20): mcky-ui `10dcd8ef86f65840fbbb4ebcb558cb3ab6121503`; DATA `1c1164cb028dd1834c1b42474ef9c8cba07dc4a7`; Collage `35521e75f33b5dd25033a2ca55d3053bd158b96a`; TRUCK `2ff240eaab5e31b8bbd210bbdc163d17fdee6019`; PORTAL `31edb50a78837335b7bd7021457b30381e65b08f`; mcky.space `814d0847a1120daece0ab45c6a1aa4c15e4be7a0` (default branch `master`).
 - [x] Confirm clean isolated audit worktrees for mcky-ui, DATA and Collage. Existing working copies were preserved; mcky-ui's original `main` copy was already one commit ahead and was not modified. DATA's original copy remained on its existing feature branch and was not modified.
 - [!] TRUCK, PORTAL and mcky.space default-branch SHAs were recorded through GitHub, but Simular Box cannot clone these private repositories because no Git credentials are available in the Box. Runner validation is blocked until secure repository access is provided.
 - [ ] Record current production deployment URL and deployed commit for each app.
@@ -52,10 +52,10 @@ For each app, inventory repeated controls and compare semantics, keyboard behavi
 
 - [x] DATA: initial source-level disposition completed for local Badge, Chip, Field, Input, Segmented, Monogram, AppDialog and Toaster. Keep payment Badge, Field, tracked Input wrapper, compound Seg/SegItem, Monogram, multi-mode AppDialog and action-aware Toaster local for now: their semantics/contracts differ from the shared primitives. DATA already consumes shared Button and CountSticker. Chip is a possible candidate, but its current count type permits strings while shared Chip accepts numbers; inspect call sites before any replacement.
 - [x] Collage: initial source-level inventory completed. DatePicker, FileDrop, PhotoGrid and ThemePicker are product/workflow-specific and have no exact shared contract; keep local. Shared Button is already used in Studio and the download action; V5 core CSS is imported once.
-- [ ] Complete call-site-level compatibility review for DATA Chip and all remaining repeated controls before approving any extraction.
+- [x] DATA Chip call-site review: Catalog uses the local Chip only for seven filter options and numeric counts from `applyCounts`. Count type is compatible, but the shared component exposes `pressed`/`tone` while DATA uses `active` and a distinct dark-ink selected treatment. Keep DATA Chip local; no extraction justified.
 - [ ] TRUCK: audit generic buttons, fields, dialogs/confirmations, status badges, tabs and loading states; keep BottomNav, calendar, finance, offline sync and operational screens local.
 - [ ] PORTAL: audit buttons, fields, alerts, dialogs, tabs, status/loading and toast presentation; keep Clerk, LINE, profile and access-management orchestration local.
-- [ ] mcky.space: verify CSS-only token consumption, static routes, self-hosted fonts and CSP; do not add a JS component runtime.
+- [x] mcky.space source audit: three Vite HTML entry pages (/, /vaultctl/, /mem/) use external stylesheets only; no inline scripts, style blocks, or style attributes. `src/tokens.css` imports `@mcky/ui/v5-tokens.css`; fonts are self-hosted; Pages middleware sets `script-src 'none'`, `style-src 'self'`, and `font-src 'self'`. The standalone 404 stylesheet remains an intentional isolated exception. Fresh build/test and deployed route checks remain in Phase 2/3.
 - [ ] Produce a component disposition list: adopt shared / keep local / needs shared primitive.
 - [ ] Make only evidence-backed changes; each app change gets its own focused PR and validation.
 
@@ -134,6 +134,32 @@ Test production deployments at 360, 375, 390 and 414 CSS px. Capture screenshots
 | 2026-11-19 | Phase 0 baseline | Partial | All six default-branch SHAs recorded. Three isolated worktrees clean. Private repo runner access and deployed revision inventory remain blocked/pending. |
 | 2026-11-19 | Phase 2 initial validation | 3/6 repositories tested | mcky-ui all gates pass; DATA passes install/typecheck/tests/build/lint/runtime audit with PWA script environment issue; Collage passes install/check/tests/build/runtime audit. TRUCK, PORTAL and mcky.space blocked by private Git clone authentication in Box. |
 | 2026-11-19 | Phase 1 initial component audit | DATA + Collage initial disposition | DATA's payment/status and form-tracking wrappers remain local; Chip needs call-site review. Collage DatePicker/FileDrop/PhotoGrid/ThemePicker remain local; shared Button adoption confirmed. No app code changed. |
+
+### Source-level component audit update — 2026-11-20
+
+- **DATA:** Completed the Chip call-site review. Catalog filter counts are numeric, so the count type itself is compatible. The public API and selected-state treatment are not equivalent (`active` and dark-ink selected styling locally versus `pressed`/`tone` in the shared primitive); retain the local component. Other local status/payment badges and form wrappers remain domain-specific.
+- **TRUCK:** Confirmed shared Button is already used by ConfirmModal and UpdatePrompt. Keep LedgerControls local because palette swatches and density choices are theme-domain controls. Keep the local Segmented control for now: its 44px option targets, full-width layout, and theme-specific selected state differ from the shared 36px pill primitive. ModalWrapper/ConfirmModal retain focus-trap, backdrop, transition, and close semantics; ModalActions has its own loading contract. ToastItem owns the auto-dismiss deadline and pause-on-hover lifecycle. No extraction approved from this source review.
+- **PORTAL:** Shared Button is already used in SignInForm, AccountEditor, LinePanel, and AccessPanel. Keep authentication, profile/email/password editing, LINE connection/sync, and access-management orchestration local. Input/field presentation is currently tied to Portal's `.field` contract; do not replace with shared Input without a separate styling and accessibility parity review. ServicesPanel's loading/empty presentation has no matching shared Skeleton contract established yet.
+- **mcky.space:** Source inspection confirms the three static entry pages and CSS-only V5 token import, self-hosted fonts, and strict no-script CSP. The existing `design-system.test.mjs` covers the static-page and token constraints, but it has not been freshly executed against the current commit in this session.
+
+### Current repository and CI snapshot — 2026-11-20
+
+| Repository | Default branch SHA | Latest check evidence observed | Result |
+| --- | --- | --- | --- |
+| mcky-ui | `10dcd8e` | `verify` completed 2026-11-19 | PASS |
+| DATA | `1c1164c` | Cloudflare Pages and typecheck/lint/tests/build completed 2026-11-19 | PASS |
+| Collage | `35521e7` | No check-runs returned for the current default-branch commit | UNVERIFIED |
+| TRUCK | `2ff240e` | `quality` completed 2026-11-19 | PASS |
+| PORTAL | `31edb50` | Cloudflare Pages completed 2026-11-20; PR #6 remains open | DEPLOY CHECK PASS; full validation unverified |
+| mcky.space | `814d084` | Cloudflare Pages completed 2026-11-18 | DEPLOY CHECK PASS; full validation unverified |
+
+These are observed GitHub check results, not a substitute for the fresh command-level validation required in Phase 2. Do not infer a full test/build pass from a deployment-only check.
+
+### Current execution constraints
+
+- SentinelX can inspect and coordinate repository work on Lab; the working copies are not cleanly aligned to the default branches. In particular, Portal has an existing uncommitted change in `src/styles/v3.css`, Truck's local main copy is one commit ahead of `origin/main`, and other local copies are on feature branches. Preserve all of them.
+- Simular Box VM is no longer the execution target due to hangs. Instabox remains excluded.
+- Do not run builds/tests on Lab. Phase 2 heavy validation is BLOCKED pending a reliable, user-approved runner. Continue source-level review and GitHub CI evidence gathering without changing application code.
 
 ## Decision and safety rules
 
