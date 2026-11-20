@@ -172,3 +172,15 @@ These are observed GitHub check results, not a substitute for the fresh command-
 - Do not redesign approved V5 navigation, app shells, or product workflows during hardening.
 - Do not start V6 work as part of this phase.
 - If a test cannot be run or a workflow cannot be authenticated, mark it BLOCKED; do not infer PASS.
+
+### GitHub-hosted validation runner enabled — 2026-11-20
+
+- User approved GitHub-hosted Actions (`ubuntu-latest`) for fresh validation. SentinelX/Lab remains lightweight coordination only; Simular Box VM remains paused; Instabox remains excluded.
+- Added PR-based validation workflows or manual-dispatch support so every app has a reproducible GitHub Actions path:
+  - DATA PR #55: existing CI retained; `workflow_dispatch` added.
+  - TRUCK PR #31: existing quality pipeline retained; `workflow_dispatch` added.
+  - Collage PR #8: new CI runs `npm ci`, Svelte check, tests and production build in `web/`.
+  - PORTAL PR #7: new CI runs Svelte typecheck, server-function typecheck, tests, production build and runtime audit.
+  - mcky.space PR #7: new CI runs TypeScript typecheck, static-page tests and production build.
+- Initial GitHub Actions results observed: Collage PASS; PORTAL PASS; mcky.space PASS. DATA and TRUCK jobs were still in dependency installation at the last check; final outcomes pending.
+- The validation workflow changes are isolated to CI configuration; no application source or production deployments were intentionally changed.
