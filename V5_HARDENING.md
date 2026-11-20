@@ -182,5 +182,5 @@ These are observed GitHub check results, not a substitute for the fresh command-
   - Collage PR #8: new CI runs `npm ci`, Svelte check, tests and production build in `web/`.
   - PORTAL PR #7: new CI runs Svelte typecheck, server-function typecheck, tests, production build and runtime audit.
   - mcky.space PR #7: new CI runs TypeScript typecheck, static-page tests and production build.
-- Initial GitHub Actions results observed: Collage PASS; PORTAL PASS; mcky.space PASS. DATA and TRUCK jobs were still in dependency installation at the last check; final outcomes pending.
-- The validation workflow changes are isolated to CI configuration; no application source or production deployments were intentionally changed.
+- Fresh GitHub Actions results observed: DATA PASS (typecheck, changed-file lint, tests, build); Collage PASS (Svelte check, tests, build); PORTAL PASS (app + function typechecks, tests, build, runtime audit); mcky.space PASS (typecheck, static tests, build). TRUCK has passed dependency install, production dependency audit, typecheck and lint; its test step remains in progress, so build and LEDGER cascade verification are pending.
+- The validation workflow changes are isolated to CI configuration; no application source or production deployments were intentionally changed. PRs remain open and unmerged: DATA #55, TRUCK #31, Collage #8, PORTAL #7, mcky.space #7. Shared library PR #15 `verify` passed on its latest recorded commit.
