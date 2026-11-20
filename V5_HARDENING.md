@@ -142,13 +142,16 @@ Test production deployments at 360, 375, 390 and 414 CSS px. Capture screenshots
 - **PORTAL:** Shared Button is already used in SignInForm, AccountEditor, LinePanel, and AccessPanel. Keep authentication, profile/email/password editing, LINE connection/sync, and access-management orchestration local. Input/field presentation is currently tied to Portal's `.field` contract; do not replace with shared Input without a separate styling and accessibility parity review. ServicesPanel's loading/empty presentation has no matching shared Skeleton contract established yet.
 - **mcky.space:** Source inspection confirms the three static entry pages and CSS-only V5 token import, self-hosted fonts, and strict no-script CSP. The existing `design-system.test.mjs` covers the static-page and token constraints, but it has not been freshly executed against the current commit in this session.
 
+
+- **Collage deployment blocker:** Vercel production deployment for main commit `35521e7` failed in Vite/Rolldown while resolving `@mcky/ui/button` (`not exported under conditions [module, node, production, svelte, import]`). The lockfile pins `@mcky/ui` to commit `5a72d95`, and that commit's published `package.json` does declare `./button`; this is therefore an observed package-resolution mismatch, not yet a proven missing export. Do not change the import or dependency until the resolver/install discrepancy is reproduced. The deployment also logged non-fatal npm warnings for `cache-dir` and the `esbuild` install-script allowlist.
+
 ### Current repository and CI snapshot — 2026-11-20
 
 | Repository | Default branch SHA | Latest check evidence observed | Result |
 | --- | --- | --- | --- |
 | mcky-ui | `10dcd8e` | `verify` completed 2026-11-19 | PASS |
 | DATA | `1c1164c` | Cloudflare Pages and typecheck/lint/tests/build completed 2026-11-19 | PASS |
-| Collage | `35521e7` | No check-runs returned for the current default-branch commit | UNVERIFIED |
+| Collage | `35521e7` | Vercel production deployment failed during `npm run build`; 10 other provider check suites remained queued | FAIL (deployment); validation unverified |
 | TRUCK | `2ff240e` | `quality` completed 2026-11-19 | PASS |
 | PORTAL | `31edb50` | Cloudflare Pages completed 2026-11-20; PR #6 remains open | DEPLOY CHECK PASS; full validation unverified |
 | mcky.space | `814d084` | Cloudflare Pages completed 2026-11-18 | DEPLOY CHECK PASS; full validation unverified |
