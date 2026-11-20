@@ -184,3 +184,68 @@ These are observed GitHub check results, not a substitute for the fresh command-
   - mcky.space PR #7: new CI runs TypeScript typecheck, static-page tests and production build.
 - Fresh GitHub Actions results observed: DATA PASS (typecheck, changed-file lint, tests, build); Collage PASS (Svelte check, tests, build); PORTAL PASS (app + function typechecks, tests, build, runtime audit); TRUCK PASS (production audit, typecheck, lint, tests, build, LEDGER theme cascade); mcky.space PASS (typecheck, static tests, build). All five apps passed their new/updated GitHub Actions validation workflows.
 - The validation workflow changes are isolated to CI configuration; no application source or production deployments were intentionally changed. PRs remain open and unmerged: DATA #55, TRUCK #31, Collage #8, PORTAL #7, mcky.space #7. Shared library PR #15 `verify` passed on its latest recorded commit.
+
+
+---
+
+## Latest status — 2026-11-20 (post-merge)
+
+**Overall:** All six hardening/CI pull requests have been merged, as confirmed by the user. The PR and workflow-migration work is complete. The remaining work is post-merge verification and production QA; do not treat these as complete until fresh default-branch or deployed evidence is recorded.
+
+### Merge status
+
+| Repository | PR | Status | Scope |
+| --- | ---: | --- | --- |
+| DATA — `ktypez/data.mcky.space` | #55 | Merged | Preserve existing CI; add manual workflow dispatch |
+| TRUCK — `ktypez/truck` | #31 | Merged | Preserve quality workflow; add manual workflow dispatch |
+| Collage — `ktypez/collage` | #8 | Merged | GitHub Actions CI: install, Svelte check, tests, production build |
+| PORTAL — `ktypez/portal` | #7 | Merged | GitHub Actions CI: app/functions typecheck, tests, build, runtime audit |
+| mcky.space — `ktypez/mcky.space` | #7 | Merged | GitHub Actions CI: typecheck, static tests, build |
+| Shared UI — `ktypez/mcky-ui` | #15 | Merged | V5 hardening plan, audit findings, runner policy and validation record |
+
+### Validation evidence
+
+All six GitHub Actions validation runs passed before merge:
+
+| Repository | Result | Workflow run |
+| --- | --- | --- |
+| DATA | PASS | [Run #44727862647](https://github.com/ktypez/data.mcky.space/actions/runs/44727862647) |
+| TRUCK | PASS | [Run #44727868926](https://github.com/ktypez/truck/actions/runs/44727868926) |
+| Collage | PASS | [Run #44727875036](https://github.com/ktypez/collage/actions/runs/44727875036) |
+| PORTAL | PASS | [Run #44727879039](https://github.com/ktypez/portal/actions/runs/44727879039) |
+| mcky.space | PASS | [Run #44727882943](https://github.com/ktypez/mcky.space/actions/runs/44727882943) |
+| mcky-ui | PASS | [Run #44728162911](https://github.com/ktypez/mcky-ui/actions/runs/44728162911) |
+
+These runs establish that the PR revisions passed their configured CI gates. They do not, by themselves, establish that the post-merge default-branch commits or production deployments have been verified.
+
+### Remaining TODO
+
+- [ ] Fetch the latest default-branch commit SHA for all six repositories and confirm the merged changes are present.
+- [ ] Confirm the relevant GitHub Actions checks pass on the post-merge default-branch commits.
+- [ ] Confirm production deployment status and deployed commit for DATA, TRUCK, Collage, PORTAL and mcky.space.
+- [ ] Recheck the Collage Vercel production deployment after PR #8 merged. A clean no-cache Preview deployment for the PR commit reached READY; record the production deployment separately.
+- [ ] Perform deployed responsive QA at 360, 375, 390 and 414 CSS px for all five apps.
+- [ ] Complete authenticated-flow and light/dark-theme QA for DATA, TRUCK and PORTAL.
+- [ ] Verify Collage editor/canvas, photo workflow, export/download and theme controls on mobile.
+- [ ] Verify mcky.space routes, system theme behavior, CSP and no-client-JavaScript constraint.
+- [ ] Verify TRUCK production includes the dotted background and Thai glyph fallback.
+- [ ] Resolve or explicitly defer the preserved TRUCK splash reconciliation; do not overwrite the preserved edits.
+- [ ] Update INTEGRATION.md with final post-merge and production evidence.
+- [ ] Publish the final V5 closure report with PASS / FAIL / BLOCKED by repository.
+
+### Current execution policy
+
+- GitHub is the source of truth.
+- GitHub Actions on `ubuntu-latest` is the approved runner for builds, tests and audits.
+- SentinelX-connected Lab is for lightweight repository inspection only.
+- Do not use Shellway, Simular Box or Instabox for this phase.
+- V6 remains paused.
+- Do not make production changes or merge further PRs without explicit approval.
+
+### Status log — post-merge
+
+| Date | Repository / phase | Result | Evidence / notes |
+| --- | --- | --- | --- |
+| 2026-11-20 | Six hardening PRs | Merged | User confirmed all six PRs are merged. |
+| 2026-11-20 | GitHub Actions validation | 6/6 PASS | Workflow runs linked in the validation table above. |
+| 2026-11-20 | Post-merge verification | Pending | Default-branch checks, production deployments and deployed QA remain to be verified. |
