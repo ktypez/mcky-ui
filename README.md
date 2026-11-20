@@ -1,15 +1,9 @@
 # mcky-ui
 
-Shared **V5 Paper Pop** design system for the mcky.space application family. V5 is the current target; this package does not ship V6 styling.
+Shared UI foundation for the mcky.space application family.
 
-## V5 features
-
-- Warm dotted-paper canvas, ink outlines, sticker surfaces, and offset hard shadows.
-- Four palettes: Matcha, Coral, Blueberry, and Butter.
-- Light and dark modes, cozy and compact density tokens, optional paper texture.
-- Svelte 5 components: Badge, Button, Card, Checkbox, Chip, CountSticker, EmptyState, Field, Input, Kbd, Monogram, Select, Segmented, Squiggle, Switch, Textarea, and TopBar.
-- Framework-independent CSS foundation for static sites and non-Svelte consumers.
-- Mobile-first, Thai/English-ready typography, keyboard accessibility, and reduced-motion support.
+- **V5 Paper Pop** remains available and unchanged through `@mcky/ui/core.css` and the existing Svelte component exports.
+- **V6 Work Shell** is introduced as an opt-in foundation through `@mcky/ui/v6.css` (package version 0.3.0). It provides the sky-blue / warm-cream / yellow palette, Space Grotesk / Sarabun / DM Mono typography, ink outlines, rounded surfaces, and hard offset shadows.
 
 ## Install
 
@@ -17,63 +11,39 @@ Shared **V5 Paper Pop** design system for the mcky.space application family. V5 
 npm install @mcky/ui svelte
 ```
 
-Import the V5 foundation once in the application entry point:
+## V5
+
+Import the existing V5 foundation:
 
 ```css
 @import '@mcky/ui/core.css';
 ```
 
-For tokens only:
+Existing Svelte components remain available from `@mcky/ui/svelte`.
+
+## V6 Work Shell
+
+Import the new V6 tokens and primitive classes:
 
 ```css
-@import '@mcky/ui/tokens.css';
+@import '@mcky/ui/v6.css';
 ```
 
-Set the theme on the root element:
+Available tokens include:
 
-```html
-<html data-palette="matcha" data-mode="light" data-density="cozy" data-texture="on">
-```
+- `--mcky-v6-sky`, `--mcky-v6-cream`, `--mcky-v6-paper`, `--mcky-v6-ink`
+- `--mcky-v6-yellow`, `--mcky-v6-blue`, `--mcky-v6-purple`, `--mcky-v6-orange`, `--mcky-v6-red`
+- `--mcky-v6-font-display`, `--mcky-v6-font-body`, `--mcky-v6-font-mono`
+- `--mcky-v6-radius`, `--mcky-v6-outline`, `--mcky-v6-shadow`
 
-Supported palettes are `matcha`, `coral`, `blueberry`, and `butter`. Set `data-mode="dark"` for chalk-night mode, `data-density="compact"` for denser rows, and `data-texture="off"` to remove the dotted paper texture. The package does not persist preferences; the consuming application owns that behavior.
+Primitive classes: `.mcky-v6-shell`, `.mcky-v6-frame`, `.mcky-v6-card`, `.mcky-v6-button`, and `.mcky-v6-label`.
 
-## Svelte usage
+V6 is opt-in and does not change existing V5 consumers. The consuming application owns theme persistence, routing, authentication, and application-specific behavior.
 
-```svelte
-<script lang="ts">
-  import { Badge, Button, Card, Chip, Input, Segmented, Switch, TopBar } from '@mcky/ui/svelte';
-  let email = $state('');
-  let palette = $state('matcha');
-  let enabled = $state(true);
-</script>
-
-<Card>
-  <Badge tone="solid">Active</Badge>
-  <Input label="Email" type="email" bind:value={email} />
-  <Chip tone="acc" pressed>Selected</Chip>
-  <Segmented bind:value={palette} options={[
-    { label: 'Matcha', value: 'matcha' },
-    { label: 'Coral', value: 'coral' }
-  ]} />
-  <Switch label="Notifications" bind:checked={enabled} />
-  <Button variant="primary">Continue</Button>
-</Card>
-```
-
-`TopBar` provides the V5 horizontal navigation pattern: desktop brand / centered pills / actions, then a horizontally scrollable navigation row on mobile.
-
-## Development
+## Development and verification
 
 ```bash
 npm ci
-npm run dev
-```
-
-Open `http://localhost:4173/playground.html` to inspect the V5 reference and interact with palette, mode, and texture controls.
-
-## Verification
-
-```bash
 npm run check
 npm test
 npm run build
@@ -81,8 +51,4 @@ npm run build:playground
 npm run audit:runtime
 ```
 
-See [DESIGN.md](./DESIGN.md) for the V5 specification and [SECURITY.md](./SECURITY.md) for dependency advisory notes.
-
-## Application integration
-
-mcky-ui provides shared presentation primitives only. DATA, TRUCK, PORTAL, and mcky.space integrations remain separate migrations and must preserve each application's routing, authentication, API contracts, persistence, and PWA behavior.
+See [DESIGN.md](./DESIGN.md) for design-system details and [SECURITY.md](./SECURITY.md) for dependency advisory notes.
