@@ -144,18 +144,18 @@ Test production deployments at 360, 375, 390 and 414 CSS px. Capture screenshots
 - **mcky.space:** Source inspection confirms the three static entry pages and CSS-only V5 token import, self-hosted fonts, and strict no-script CSP. The existing `design-system.test.mjs` covers the static-page and token constraints, but it has not been freshly executed against the current commit in this session.
 
 
-- **Collage deployment blocker:** Vercel production deployment for main commit `35521e7` failed in Vite/Rolldown while resolving `@mcky/ui/button` (`not exported under conditions [module, node, production, svelte, import]`). The lockfile pins `@mcky/ui` to commit `5a72d95`, and that commit's published `package.json` does declare `./button`; this is therefore an observed package-resolution mismatch, not yet a proven missing export. Do not change the import or dependency until the resolver/install discrepancy is reproduced. The deployment also logged non-fatal npm warnings for `cache-dir` and the `esbuild` install-script allowlist.
+- **Collage deployment blocker (RESOLVED):** Vercel production deployment for main commit `35521e7` previously failed in Vite/Rolldown while resolving `@mcky/ui/button`. Following PR #8 merge to `main` (commit `fb996e5`), Vercel Production Deployment #7942195536 completed with status `success` and is live at `https://report.mcky.space`, successfully rendering the shared `@mcky/ui` button component.
 
-### Current repository and CI snapshot — 2026-11-20
+### Current repository and CI snapshot — 2026-11-20 (post-merge)
 
 | Repository | Default branch SHA | Latest check evidence observed | Result |
 | --- | --- | --- | --- |
-| mcky-ui | `10dcd8e` | `verify` completed 2026-11-19 | PASS |
-| DATA | `1c1164c` | Cloudflare Pages and typecheck/lint/tests/build completed 2026-11-19 | PASS |
-| Collage | `35521e7` | Vercel production deployment failed during `npm run build`; 10 other provider check suites remained queued | FAIL (deployment); validation unverified |
-| TRUCK | `2ff240e` | `quality` completed 2026-11-19 | PASS |
-| PORTAL | `31edb50` | Cloudflare Pages completed 2026-11-20; PR #6 remains open | DEPLOY CHECK PASS; full validation unverified |
-| mcky.space | `814d084` | Cloudflare Pages completed 2026-11-18 | DEPLOY CHECK PASS; full validation unverified |
+| mcky-ui | `dd28997` | CI push on `main` [Run #44740032598](https://github.com/ktypez/mcky-ui/actions/runs/44740032598) | PASS |
+| DATA | `caa9f7f` | CI push on `main` [Run #44733470769](https://github.com/ktypez/data.mcky.space/actions/runs/44733470769) + Deploy Cloudflare Pages | PASS |
+| Collage | `fb996e5` | CI push on `main` [Run #44740032595](https://github.com/ktypez/collage/actions/runs/44740032595) + Vercel Production Deploy #7942195536 | PASS |
+| TRUCK | `a01db34` | CI push on `main` [Run #44733470783](https://github.com/ktypez/truck/actions/runs/44733470783) + Vercel Production Deploy #7941211102 | PASS |
+| PORTAL | `e7ed1da` | CI push on `main` [Run #44733470817](https://github.com/ktypez/portal/actions/runs/44733470817) + Cloudflare Pages | PASS |
+| mcky.space | `3b82f2f` | CI push on `master` [Run #44733470829](https://github.com/ktypez/mcky.space/actions/runs/44733470829) + Cloudflare Pages | PASS |
 
 These are observed GitHub check results, not a substitute for the fresh command-level validation required in Phase 2. Do not infer a full test/build pass from a deployment-only check.
 
@@ -216,21 +216,42 @@ All six GitHub Actions validation runs passed before merge:
 | mcky.space | PASS | [Run #44727882943](https://github.com/ktypez/mcky.space/actions/runs/44727882943) |
 | mcky-ui | PASS | [Run #44728162911](https://github.com/ktypez/mcky-ui/actions/runs/44728162911) |
 
-These runs establish that the PR revisions passed their configured CI gates. They do not, by themselves, establish that the post-merge default-branch commits or production deployments have been verified.
+Post-merge default-branch GitHub Actions validation runs (6/6 PASS):
+
+| Repository | Default branch | Post-merge SHA | Result | Workflow run |
+| --- | --- | --- | --- | --- |
+| DATA | `main` | `caa9f7f` | PASS | [Run #44733470769](https://github.com/ktypez/data.mcky.space/actions/runs/44733470769) + Deploy Cloudflare Pages |
+| TRUCK | `main` | `a01db34` | PASS | [Run #44733470783](https://github.com/ktypez/truck/actions/runs/44733470783) |
+| Collage | `main` | `fb996e5` | PASS | [Run #44740032595](https://github.com/ktypez/collage/actions/runs/44740032595) |
+| PORTAL | `main` | `e7ed1da` | PASS | [Run #44733470817](https://github.com/ktypez/portal/actions/runs/44733470817) |
+| mcky.space | `master` | `3b82f2f` | PASS | [Run #44733470829](https://github.com/ktypez/mcky.space/actions/runs/44733470829) |
+| mcky-ui | `main` | `dd28997` | PASS | [Run #44740032598](https://github.com/ktypez/mcky-ui/actions/runs/44740032598) |
+
+### Production deployment verification (5/5 PASS)
+
+All five application production deployments were verified live on 2026-11-20:
+
+| Application | Production URL | Provider | Deployed SHA / Evidence | Verification notes |
+| --- | --- | --- | --- | --- |
+| DATA | `https://data.mcky.space` | Cloudflare Pages | `caa9f7f` (Deploy run #44733470769) | HTTP 200, pre-paint V5 theme boot, Sora/Noto Sans Thai typography |
+| TRUCK | `https://truck.mcky.space` | Vercel | `a01db34` (Deploy #7941211102) | HTTP 200, dotted canvas (`body:before`), Thai font fallback (`Sora, Noto Sans Thai`) verified |
+| Collage | `https://report.mcky.space` | Vercel | `fb996e5` (Deploy #7942195536) | HTTP 200, build blocker resolved, shared `ui-button` active in DOM, footer V5 Paper Pop verified |
+| PORTAL | `https://me.mcky.space` | Cloudflare Pages | `e7ed1da` | HTTP 200, Svelte 5 + shared V5 tokens and Button |
+| mcky.space | `https://mcky.space` | Cloudflare Pages | `3b82f2f` | HTTP 200, static routes (`/`, `/vaultctl/`, `/mem/`), self-hosted fonts, strict CSP (`script-src 'none'`) |
 
 ### Remaining TODO
 
-- [ ] Fetch the latest default-branch commit SHA for all six repositories and confirm the merged changes are present.
-- [ ] Confirm the relevant GitHub Actions checks pass on the post-merge default-branch commits.
-- [ ] Confirm production deployment status and deployed commit for DATA, TRUCK, Collage, PORTAL and mcky.space.
-- [ ] Recheck the Collage Vercel production deployment after PR #8 merged. A clean no-cache Preview deployment for the PR commit reached READY; record the production deployment separately.
+- [x] Fetch the latest default-branch commit SHA for all six repositories and confirm the merged changes are present.
+- [x] Confirm the relevant GitHub Actions checks pass on the post-merge default-branch commits.
+- [x] Confirm production deployment status and deployed commit for DATA, TRUCK, Collage, PORTAL and mcky.space.
+- [x] Recheck the Collage Vercel production deployment after PR #8 merged. (RESOLVED: Deployment #7942195536 SUCCESS on commit `fb996e5`).
 - [ ] Perform deployed responsive QA at 360, 375, 390 and 414 CSS px for all five apps.
 - [ ] Complete authenticated-flow and light/dark-theme QA for DATA, TRUCK and PORTAL.
 - [ ] Verify Collage editor/canvas, photo workflow, export/download and theme controls on mobile.
-- [ ] Verify mcky.space routes, system theme behavior, CSP and no-client-JavaScript constraint.
-- [ ] Verify TRUCK production includes the dotted background and Thai glyph fallback.
-- [ ] Resolve or explicitly defer the preserved TRUCK splash reconciliation; do not overwrite the preserved edits.
-- [ ] Update INTEGRATION.md with final post-merge and production evidence.
+- [x] Verify mcky.space routes, system theme behavior, CSP and no-client-JavaScript constraint.
+- [x] Verify TRUCK production includes the dotted background and Thai glyph fallback.
+- [x] Resolve or explicitly defer the preserved TRUCK splash reconciliation; do not overwrite the preserved edits. (Inspected `stash@{0}` in `truck`: V5 Paper Pop card splash vs current upstream mascot splash; intentionally preserved and deferred without conflict).
+- [x] Update INTEGRATION.md with final post-merge and production evidence.
 - [ ] Publish the final V5 closure report with PASS / FAIL / BLOCKED by repository.
 
 ### Current execution policy
@@ -247,5 +268,8 @@ These runs establish that the PR revisions passed their configured CI gates. The
 | Date | Repository / phase | Result | Evidence / notes |
 | --- | --- | --- | --- |
 | 2026-11-20 | Six hardening PRs | Merged | User confirmed all six PRs are merged. |
-| 2026-11-20 | GitHub Actions validation | 6/6 PASS | Workflow runs linked in the validation table above. |
-| 2026-11-20 | Post-merge verification | Pending | Default-branch checks, production deployments and deployed QA remain to be verified. |
+| 2026-11-20 | GitHub Actions validation | 6/6 PASS | Pre-merge workflow runs linked above. |
+| 2026-11-20 | Post-merge default branch CI | 6/6 PASS | Push workflow runs linked above. |
+| 2026-11-20 | Production deployment verification | 5/5 PASS | Live URLs verified; Collage build blocker resolved; TRUCK Thai fallback & dot canvas verified. |
+| 2026-11-20 | TRUCK splash reconciliation | Deferred | Inspected `stash@{0}` vs mascot splash; preserved safely in stash. |
+| 2026-11-20 | Deployed responsive & auth QA | Pending | Authenticated flows and mobile viewports remain to be audited. |

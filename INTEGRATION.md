@@ -106,12 +106,28 @@ Initial responsive checks were run in Simular Box at 360, 375, 390 and 414 CSS p
 | Application | Result | Notes |
 | --- | --- | --- |
 | DATA (`data.mcky.space`) | Pass | No document-level horizontal overflow; light layout inspected; explicit dark-mode toggle works. |
-| TRUCK (`truck.mcky.space`) | Pass with fix pending | No document-level horizontal overflow. Found missing Thai glyphs in the mono eyebrow because the font stack reached generic monospace before Noto Sans Thai; fix is proposed in [TRUCK PR #28](https://github.com/ktypez/truck/pull/28). |
+| TRUCK (`truck.mcky.space`) | Pass | No document-level horizontal overflow. Thai glyph fallback fix ([TRUCK PR #28](https://github.com/ktypez/truck/pull/28)) merged and verified live in production alongside dotted background (`data-texture`). |
 | PORTAL (`me.mcky.space`) | Pass | No horizontal overflow; form inputs remain 16px and primary actions meet 44px height. |
-| Collage (`report.mcky.space`) | Pass | No horizontal overflow; style controls remain at least 56px high. |
-| mcky.space | Pass | No document-level horizontal overflow; long install snippets scroll inside their own code blocks. |
+| Collage (`report.mcky.space`) | Pass | No horizontal overflow; style controls remain at least 56px high. Build blocker resolved on Vercel; shared `ui-button` active. |
+| mcky.space | Pass | No document-level horizontal overflow; long install snippets scroll inside their own code blocks. Static routes `/`, `/vaultctl/`, `/mem/` and strict CSP verified. |
 
-Scope: this checkpoint covers public landing, sign-in, or unauthenticated application surfaces only. Authenticated Truck and Portal workflows, and dark-mode parity outside DATA, still need a separate pass. The TRUCK font fix is not live until its PR is merged and deployed.
+Scope: this checkpoint covers public landing, sign-in, or unauthenticated application surfaces. Authenticated Truck and Portal workflows, and dark-mode parity outside DATA, still need a separate pass.
+
+## Post-Merge and Production Deployment Verification — 2026-11-20
+
+All six hardening PRs (DATA #55, TRUCK #31, Collage #8, PORTAL #7, mcky.space #7, mcky-ui #15) are merged. Post-merge push validation on default branches passed 6/6 across all repositories.
+
+Live production deployments verified:
+- **DATA** (`data.mcky.space`): Cloudflare Pages live from commit `caa9f7f` (Deploy run #44733470769 PASS).
+- **TRUCK** (`truck.mcky.space`): Vercel Production deployment #7941211102 from commit `a01db34` (SUCCESS).
+- **Collage** (`report.mcky.space`): Vercel Production deployment #7942195536 from commit `fb996e5` (SUCCESS).
+- **PORTAL** (`me.mcky.space`): Cloudflare Pages live from commit `e7ed1da`.
+- **mcky.space** (`mcky.space`): Cloudflare Pages live from commit `3b82f2f`.
+
+Truck splash reconciliation:
+- Inspected user's local `stash@{0}` in `truck` (V5 Paper Pop card splash with brand mark, wordmark, squiggle and loading bar) against the current upstream mascot splash (`splash-mascot`, random geometric shape, `splash-boot.js`).
+- The stashed edits are preserved safely in Git stash and intentionally deferred to avoid conflict with the active mascot splash.
+
 ## Remaining V5 hardening
 
 1. Evaluate repeated generic controls in DATA, Collage, Truck and Portal; move only controls whose interaction and accessibility contracts match a shared primitive.
