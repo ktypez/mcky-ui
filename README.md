@@ -3,7 +3,7 @@
 Shared UI foundation for the mcky.space application family.
 
 - **V5 Paper Pop** remains available and unchanged through `@mcky/ui/core.css` and the existing Svelte component exports.
-- **V6 Work Shell** is introduced as an opt-in foundation through `@mcky/ui/v6.css` (package version 0.3.0). It provides the sky-blue / warm-cream / yellow palette, Space Grotesk / Sarabun / DM Mono typography, ink outlines, rounded surfaces, and hard offset shadows.
+- **V6 Work Shell** is introduced as an opt-in foundation through `@mcky/ui/v6.css`. It provides the sky-blue / warm-cream / yellow palette, Space Grotesk / Sarabun / DM Mono typography, ink outlines, rounded surfaces, hard offset shadows, and — from 0.4.0 — the motion/decoration layer.
 
 ## Install
 
@@ -37,6 +37,24 @@ Available tokens include:
 - `--mcky-v6-radius`, `--mcky-v6-outline`, `--mcky-v6-shadow`
 
 Primitive classes: `.mcky-v6-shell`, `.mcky-v6-frame`, `.mcky-v6-card`, `.mcky-v6-button`, and `.mcky-v6-label`.
+
+### V6 motion, decoration & transitions
+
+`v6.css` also imports the V6 motion layer. It ships the Attendance-Terminal
+motion language: drifting clouds, twinkling sparkles, dashed orbit rings,
+dotted paper, accent strips, ink rules, live dots, loading bars, shimmer,
+toasts, staged entrances and confetti.
+
+- Transitions: `.mcky-v6-lift`, `.mcky-v6-tilt`, `.mcky-v6-press`
+- Decoration: `.mcky-v6-canvas`, `.mcky-v6-dotted`, `.mcky-v6-rule`,
+  `.mcky-v6-strip`, `.mcky-v6-dot-live`, `.mcky-v6-spark`, `.mcky-v6-orbit`,
+  `.mcky-v6-float`, `.mcky-v6-bob`, `.mcky-v6-loading-bar`, `.mcky-v6-shimmer`
+- One-shot: `.mcky-v6-enter`, `.mcky-v6-enter-pop`, `.mcky-v6-stagger`,
+  `.mcky-v6-toast`, `.mcky-v6-overlay`
+- Scripted helpers: `import { burstConfetti, withoutTransitions } from '@mcky/ui/motion'`
+
+Motion is opt-in per class and every movement is neutralised under
+`prefers-reduced-motion: reduce`. See [V6.md](./V6.md) for the full spec.
 
 V6 is opt-in and does not change existing V5 consumers. The consuming application owns theme persistence, routing, authentication, and application-specific behavior.
 
