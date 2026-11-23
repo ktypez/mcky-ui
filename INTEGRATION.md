@@ -1,8 +1,9 @@
 # V5 ecosystem integration plan
 
-V5 Paper Pop is the only active design-system target. V6 is paused. This plan
-covers five application repositories and keeps their product-specific
-information architecture intact.
+V5 Paper Pop is the only active design-system target for this integration plan. A
+separate opt-in V6 Work Shell language ships in the same package
+([V6.md](./V6.md)) and is adopted independently. This plan covers five application
+repositories and keeps their product-specific information architecture intact.
 
 ## Ownership model
 
@@ -141,4 +142,4 @@ Truck splash reconciliation:
 - Per-repository tests, typechecks, builds and production dependency audits run in Simular Box, never on the mobile Lab.
 - No V6 assets, tokens or variants are introduced during this phase.
 
-V6 remains paused. V5 is the only active design-system target.
+V5 remains the target for this integration plan; V6 is a separate opt-in language documented in [V6.md](./V6.md).

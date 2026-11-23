@@ -22,6 +22,8 @@
     "src/**/*.svelte",
     "playground/**/*.ts",
     "playground/**/*.svelte",
+    "v6-playground/**/*.ts",
+    "v6-playground/**/*.svelte",
     "vite.config.ts",
     "vite.playground.config.ts"
   ]

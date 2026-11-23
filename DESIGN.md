@@ -1,6 +1,6 @@
 # V5 Paper Pop — Design Specification
 
-mcky-ui is the shared V5 design system for the mcky.space ecosystem. V5 is the active target. Do not introduce V6 styling, layouts, or tokens in this package.
+mcky-ui is the shared design system for the mcky.space ecosystem. V5 Paper Pop is the default target in this document and does not change. An opt-in V6 Work Shell language also ships in this package; its tokens, primitives and motion layer are specified in [V6.md](./V6.md).
 
 ## Visual language
 
@@ -49,6 +49,6 @@ V5 navigation is horizontal and top-aligned. Desktop uses a top bar with brand o
 
 ## Out of scope
 
-- No V6 migration or V6 visual language.
+- No V6 migration of the V5 components in this document; V6 is a separate opt-in entry documented in [V6.md](./V6.md).
 - No application routing, auth, persistence, business logic, or API contracts.
 - No framework dependency beyond Svelte as a peer dependency.

@@ -1,5 +1,6 @@
 /* MCKY UI V6 — Work Shell foundation. V5 remains available and unchanged. */
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700;800&display=swap');
+@import './v6-motion.css';
 
 :root {
   --mcky-v6-sky: #9DD2F7;

@@ -1,0 +1,404 @@
+/* MCKY UI V6 — Motion, decoration & transition layer.
+ *
+ * Extracted from the Attendance Terminal design language
+ * (github.com/ktypez/attendance-app) and the Work Shell surfaces, then
+ * normalised for a shared foundation:
+ *   - interactive state changes use transitions (reversible),
+ *   - one-shot sequences (toast, entrance, confetti) use keyframes,
+ *   - ambient decoration (clouds, sparkles, orbits) is opt-in per class,
+ *   - every movement is neutralised under `prefers-reduced-motion: reduce`.
+ *
+ * Opt in with `@import '@mcky/ui/v6-motion.css';` or rely on `v6.css`,
+ * which imports this file.
+ */
+
+:root {
+  /* Motion */
+  --mcky-v6-ease: cubic-bezier(0.2, 0, 0, 1);
+  --mcky-v6-ease-out: ease-out;
+  --mcky-v6-ease-in-out: ease-in-out;
+  --mcky-v6-dur-instant: 100ms;
+  --mcky-v6-dur-fast: 150ms;
+  --mcky-v6-dur: 300ms;
+  --mcky-v6-dur-slow: 500ms;
+  --mcky-v6-dur-spin: 800ms;
+  --mcky-v6-dur-ambient: 7s;
+  --mcky-v6-stagger: 100ms;
+
+  /* Interaction geometry */
+  --mcky-v6-lift: 2px;
+  --mcky-v6-press: 0.96;
+  --mcky-v6-shadow-hover: 8px 8px 0 var(--mcky-v6-ink);
+
+  /* Decoration */
+  --mcky-v6-dot: rgba(17, 17, 17, 0.12);
+  --mcky-v6-dot-light: rgba(255, 255, 255, 0.55);
+  --mcky-v6-cloud: rgba(255, 255, 255, 0.6);
+  --mcky-v6-shimmer: rgba(255, 255, 255, 0.55);
+  --mcky-v6-strip-width: 6px;
+  --mcky-v6-strip-color: var(--mcky-v6-blue);
+  --mcky-v6-success: #3dd6a3;
+}
+
+/* ------------------------------------------------------------------ *
+ * Keyframes — one-shot sequences and ambient loops.
+ * ------------------------------------------------------------------ */
+
+@keyframes mcky-v6-float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(8px, -22px); }
+}
+@keyframes mcky-v6-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes mcky-v6-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes mcky-v6-wiggle {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50% { transform: rotate(1.5deg); }
+}
+@keyframes mcky-v6-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.55; }
+}
+@keyframes mcky-v6-twinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.85) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.08) rotate(18deg); }
+}
+@keyframes mcky-v6-shimmer {
+  from { background-position: 180% 0; }
+  to { background-position: -80% 0; }
+}
+@keyframes mcky-v6-bar {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(360%); }
+}
+@keyframes mcky-v6-enter-up {
+  from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+@keyframes mcky-v6-pop-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes mcky-v6-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes mcky-v6-toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mcky-v6-toast-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(-8px); }
+}
+
+/* ------------------------------------------------------------------ *
+ * Transitions — interactive state (reversible).
+ * ------------------------------------------------------------------ */
+
+.mcky-v6-lift {
+  transition:
+    transform var(--mcky-v6-dur-fast) var(--mcky-v6-ease-out),
+    box-shadow var(--mcky-v6-dur-fast) var(--mcky-v6-ease-out);
+}
+@media (hover: hover) {
+  .mcky-v6-lift:hover {
+    transform: translate(calc(-1 * var(--mcky-v6-lift)), calc(-1 * var(--mcky-v6-lift)));
+    box-shadow: var(--mcky-v6-shadow-hover);
+  }
+  .mcky-v6-tilt:hover {
+    transform: translate(calc(-1 * var(--mcky-v6-lift)), calc(-1 * var(--mcky-v6-lift))) rotate(-1deg);
+    box-shadow: var(--mcky-v6-shadow-hover);
+  }
+}
+.mcky-v6-lift:not(:disabled):active,
+.mcky-v6-tilt:not(:disabled):active,
+.mcky-v6-press:not(:disabled):active {
+  transform: scale(var(--mcky-v6-press));
+  box-shadow: var(--mcky-v6-shadow-sm);
+}
+.mcky-v6-lift:disabled,
+.mcky-v6-tilt:disabled,
+.mcky-v6-press:disabled {
+  transform: none;
+}
+.mcky-v6-press {
+  transition: transform var(--mcky-v6-dur-fast) var(--mcky-v6-ease-out);
+}
+
+/* ------------------------------------------------------------------ *
+ * Ambient decoration.
+ * ------------------------------------------------------------------ */
+
+/* Drifting clouds behind a hero. Content stays above with z-index 1. */
+.mcky-v6-canvas {
+  position: relative;
+  isolation: isolate;
+}
+.mcky-v6-canvas::before,
+.mcky-v6-canvas::after {
+  content: '\2601';
+  position: absolute;
+  z-index: 0;
+  font-size: 3.2rem;
+  line-height: 1;
+  color: var(--mcky-v6-cloud);
+  pointer-events: none;
+  animation: mcky-v6-float var(--mcky-v6-dur-ambient) var(--mcky-v6-ease-in-out) infinite;
+}
+.mcky-v6-canvas::before { top: 4%; left: 6%; }
+.mcky-v6-canvas::after { top: 12%; right: 6%; font-size: 2.4rem; animation-delay: 2.5s; }
+/* Keep content above the clouds; `:where()` keeps this overridable. */
+:where(.mcky-v6-canvas) > :where(*) { position: relative; z-index: 1; }
+
+/* Dotted paper texture. */
+.mcky-v6-dotted {
+  background-image: radial-gradient(var(--mcky-v6-dot) 1.2px, transparent 1.2px);
+  background-size: 16px 16px;
+}
+.mcky-v6-dotted-light {
+  background-image: radial-gradient(var(--mcky-v6-dot-light) 1.2px, transparent 1.2px);
+  background-size: 16px 16px;
+}
+
+/* Section label followed by an ink rule. */
+.mcky-v6-rule {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 700 0.7rem var(--mcky-v6-font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.mcky-v6-rule::after {
+  content: '';
+  flex: 1;
+  height: 2.5px;
+  background: var(--mcky-v6-ink);
+}
+
+/* Blue accent strip down the left edge of a surface. */
+.mcky-v6-strip {
+  position: relative;
+  overflow: clip;
+}
+.mcky-v6-strip::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--mcky-v6-strip-width);
+  background: var(--mcky-v6-strip-color);
+  border-right: var(--mcky-v6-outline);
+}
+
+/* Live dot with a slow pulse. */
+.mcky-v6-dot-live {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--mcky-v6-yellow);
+  border: 2px solid var(--mcky-v6-ink);
+  animation: mcky-v6-pulse 2s var(--mcky-v6-ease-in-out) infinite;
+}
+.mcky-v6-dot-live--ok { background: var(--mcky-v6-success); }
+.mcky-v6-dot-live--warn { background: var(--mcky-v6-orange); }
+.mcky-v6-dot-live--error { background: var(--mcky-v6-red); }
+
+/* Twinkling sparkles: place freely, add --delay for a second beat. */
+.mcky-v6-spark {
+  display: inline-block;
+  animation: mcky-v6-twinkle 2.6s var(--mcky-v6-ease-in-out) infinite;
+}
+.mcky-v6-spark--delay { animation-delay: 1.3s; }
+
+/* Slow dashed orbit ring. */
+.mcky-v6-orbit {
+  position: absolute;
+  border: 1.5px dashed rgba(17, 17, 17, 0.55);
+  border-radius: 50%;
+  animation: mcky-v6-spin 26s linear infinite;
+}
+
+/* Ambient float for scattered nodes. */
+.mcky-v6-float { animation: mcky-v6-float var(--mcky-v6-dur-ambient) var(--mcky-v6-ease-in-out) infinite; }
+.mcky-v6-float--slow { animation-duration: 10s; }
+.mcky-v6-float--delay { animation-delay: 2.5s; }
+.mcky-v6-bob { animation: mcky-v6-bob 3.2s var(--mcky-v6-ease-in-out) infinite; }
+
+/* Loading bar and spinning glyph. */
+.mcky-v6-loading-bar {
+  position: relative;
+  overflow: clip;
+  height: 6px;
+  border: 1.5px solid var(--mcky-v6-ink);
+  border-radius: 999px;
+  background: var(--mcky-v6-paper);
+}
+.mcky-v6-loading-bar::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 34%;
+  border-radius: 999px;
+  background: var(--mcky-v6-yellow);
+  animation: mcky-v6-bar 1.1s var(--mcky-v6-ease) infinite;
+}
+.mcky-v6-spin { animation: mcky-v6-spin var(--mcky-v6-dur-spin) linear infinite; }
+
+/* Shimmer sweep over a skeleton surface. */
+.mcky-v6-shimmer {
+  position: relative;
+  overflow: clip;
+}
+.mcky-v6-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 34%, var(--mcky-v6-shimmer) 50%, transparent 66%);
+  background-size: 200% 100%;
+  animation: mcky-v6-shimmer 2.2s linear infinite;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ *
+ * One-shot sequences.
+ * ------------------------------------------------------------------ */
+
+.mcky-v6-enter { animation: mcky-v6-enter-up var(--mcky-v6-dur) var(--mcky-v6-ease) both; }
+.mcky-v6-enter-pop { animation: mcky-v6-pop-in var(--mcky-v6-dur) var(--mcky-v6-ease) both; }
+
+/* Staged entrance: 100ms apart, up to eight children. */
+.mcky-v6-stagger > * { animation: mcky-v6-enter-up var(--mcky-v6-dur) var(--mcky-v6-ease) both; }
+.mcky-v6-stagger > *:nth-child(2) { animation-delay: calc(var(--mcky-v6-stagger) * 1); }
+.mcky-v6-stagger > *:nth-child(3) { animation-delay: calc(var(--mcky-v6-stagger) * 2); }
+.mcky-v6-stagger > *:nth-child(4) { animation-delay: calc(var(--mcky-v6-stagger) * 3); }
+.mcky-v6-stagger > *:nth-child(5) { animation-delay: calc(var(--mcky-v6-stagger) * 4); }
+.mcky-v6-stagger > *:nth-child(6) { animation-delay: calc(var(--mcky-v6-stagger) * 5); }
+.mcky-v6-stagger > *:nth-child(7) { animation-delay: calc(var(--mcky-v6-stagger) * 6); }
+.mcky-v6-stagger > *:nth-child(n + 8) { animation-delay: calc(var(--mcky-v6-stagger) * 7); }
+
+/* Toasts: enter and exit, plus semantic left borders. */
+.mcky-v6-toast-stack {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 92%;
+  max-width: 380px;
+  pointer-events: none;
+}
+.mcky-v6-toast {
+  padding: 13px 16px;
+  border: var(--mcky-v6-outline);
+  border-left: var(--mcky-v6-strip-width) solid var(--mcky-v6-blue);
+  border-radius: var(--mcky-v6-radius-sm);
+  background: var(--mcky-v6-paper);
+  color: var(--mcky-v6-ink);
+  box-shadow: var(--mcky-v6-shadow-sm);
+  font: 600 0.86rem var(--mcky-v6-font-body);
+  pointer-events: auto;
+  animation: mcky-v6-toast-in 0.2s var(--mcky-v6-ease-out) both;
+}
+.mcky-v6-toast--success { border-left-color: var(--mcky-v6-success); }
+.mcky-v6-toast--error { border-left-color: var(--mcky-v6-red); }
+.mcky-v6-toast--warning { border-left-color: var(--mcky-v6-orange); }
+.mcky-v6-toast--out { animation: mcky-v6-toast-out var(--mcky-v6-dur-fast) var(--mcky-v6-ease-out) both; }
+
+/* Confetti layer painted by the optional `burstConfetti()` helper. */
+.mcky-v6-confetti-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: clip;
+  pointer-events: none;
+}
+.mcky-v6-confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 14px;
+  border: 1.5px solid var(--mcky-v6-ink);
+  border-radius: 3px;
+  will-change: transform, opacity;
+}
+
+/* ------------------------------------------------------------------ *
+ * Overlays.
+ * ------------------------------------------------------------------ */
+
+.mcky-v6-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(157, 210, 247, 0.85);
+  overscroll-behavior: contain;
+}
+.mcky-v6-overlay > * { animation: mcky-v6-pop-in var(--mcky-v6-dur) var(--mcky-v6-ease) both; }
+.mcky-v6-scroll { overscroll-behavior: contain; }
+
+/* ------------------------------------------------------------------ *
+ * Theme-switch suppression.
+ * Add `data-v6-no-transition` to <html> for one frame while swapping
+ * theme attributes so colors do not smear.
+ * ------------------------------------------------------------------ */
+
+[data-v6-no-transition],
+[data-v6-no-transition] *,
+[data-v6-no-transition] *::before,
+[data-v6-no-transition] *::after {
+  transition: none !important;
+  animation-delay: 0s !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Reduced motion: keep the semantic cue, drop the movement.
+ * ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .mcky-v6-canvas::before,
+  .mcky-v6-canvas::after,
+  .mcky-v6-orbit,
+  .mcky-v6-float,
+  .mcky-v6-float--slow,
+  .mcky-v6-float--delay,
+  .mcky-v6-bob,
+  .mcky-v6-dot-live,
+  .mcky-v6-spark,
+  .mcky-v6-spark--delay,
+  .mcky-v6-loading-bar::after,
+  .mcky-v6-spin,
+  .mcky-v6-shimmer::after {
+    animation: none !important;
+  }
+  .mcky-v6-enter,
+  .mcky-v6-enter-pop,
+  .mcky-v6-stagger > *,
+  .mcky-v6-overlay > * {
+    animation: mcky-v6-fade-in var(--mcky-v6-dur-fast) var(--mcky-v6-ease-out) both !important;
+  }
+  .mcky-v6-lift,
+  .mcky-v6-tilt,
+  .mcky-v6-press {
+    transition: none !important;
+  }
+  .mcky-v6-lift:hover,
+  .mcky-v6-lift:active,
+  .mcky-v6-tilt:hover,
+  .mcky-v6-tilt:active,
+  .mcky-v6-press:active {
+    transform: none !important;
+  }
+}
