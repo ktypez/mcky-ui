@@ -1,0 +1,64 @@
+/* MCKY UI V6 — light/dark theme overrides.
+ *
+ * V6 defaults to light and never follows the OS by itself: an app opts in by
+ * setting `data-v6-mode="dark"` (or the V5-compatible `data-mode="dark"`) on
+ * <html>, or by calling `applyV6Mode()` from `@mcky/ui/theme`. Absolute mode
+ * values always win over `data-mode`. This keeps existing V6 consumers stable
+ * when the visitor's OS switches to dark.
+ *
+ * The night ramp is a twilight palette of its own, not an inversion of the
+ * day theme: mid-tone indigo surfaces, warm white ink and gold accents. Every
+ * text pair is >= 4.5:1 on the surface it renders on; see test/v6-theme.test.mjs.
+ */
+
+:root[data-v6-mode='light'],
+:root[data-mode='light'] {
+  color-scheme: light;
+}
+
+:root[data-v6-mode='dark'],
+:root[data-mode='dark'] {
+  color-scheme: dark;
+
+  /* Surface + ink */
+  --mcky-v6-sky: #1b2440;
+  --mcky-v6-cream: #263354;
+  --mcky-v6-paper: #314066;
+  --mcky-v6-ink: #f4f1e8;
+  --mcky-v6-muted: #c9d4ec;
+  --mcky-v6-subtle: #a6b5d6;
+
+  /* Accents. Gold keeps a dark label in both themes via --mcky-v6-on-accent. */
+  --mcky-v6-yellow: #ffd84d;
+  --mcky-v6-blue: #9ec1ff;
+  --mcky-v6-purple: #c9b8ff;
+  --mcky-v6-orange: #ffb77e;
+  --mcky-v6-red: #ff9a92;
+  --mcky-v6-success: #7fe3b8;
+  --mcky-v6-on-accent: #1b2440;
+
+  /* Edges and elevation */
+  --mcky-v6-outline: 2.5px solid #b9c8ea;
+  --mcky-v6-shadow: 5px 5px 0 #101a30;
+  --mcky-v6-shadow-sm: 3px 3px 0 #101a30;
+  --mcky-v6-shadow-hover: 8px 8px 0 #101a30;
+  --mcky-v6-overlay: rgba(27, 36, 64, 0.88);
+
+  /* Decoration tuned for a dark canvas */
+  --mcky-v6-dot: rgba(244, 241, 232, 0.14);
+  --mcky-v6-dot-light: rgba(255, 255, 255, 0.42);
+  --mcky-v6-cloud: rgba(201, 212, 236, 0.32);
+  --mcky-v6-shimmer: rgba(255, 255, 255, 0.14);
+  --mcky-v6-strip-color: var(--mcky-v6-blue);
+
+  /* Scenery */
+  --mcky-v6-scenery-sun: #ffd86b;
+  --mcky-v6-scenery-hill: #263354;
+  --mcky-v6-scenery-hill-alt: #1b2440;
+  --mcky-v6-scenery-meadow: #16203c;
+  --mcky-v6-scenery-star: #fff6d8;
+  --mcky-v6-scenery-moon: #f6efd2;
+  --mcky-v6-scenery-city: #16203c;
+  --mcky-v6-scenery-city-edge: #42557f;
+  --mcky-v6-scenery-window: #ffd84d;
+}

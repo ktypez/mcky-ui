@@ -1,0 +1,176 @@
+/* MCKY UI V6 — animated day/night backdrop.
+ *
+ * Zero-markup scenery: add one element to the page and put your content in a
+ * sibling with `.mcky-v6-scenery-content`. The view follows `data-v6-mode` on
+ * <html> (or an explicit `data-v6-mode` on the scenery element itself):
+ *
+ *   <div class="mcky-v6-scenery" aria-hidden="true"></div>
+ *   <main class="mcky-v6-scenery-content">…</main>
+ *
+ * Day = Attendance-style clouds over rolling hills and a meadow. Night =
+ * twinkling stars, a crescent moon and a lit city skyline. Clouds drift and
+ * stars twinkle; all movement stops under prefers-reduced-motion.
+ */
+
+.mcky-v6-scenery {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: var(--mcky-v6-sky);
+  /* Each cloud is a flat base plus three overlapping puffs. */
+  background-image:
+    radial-gradient(circle 34px at 84% 13%, var(--mcky-v6-scenery-sun) 98%, transparent 100%),
+    radial-gradient(ellipse 78px 18px at 12% 20%, var(--mcky-v6-cloud) 92%, transparent 100%),
+    radial-gradient(circle 20px at 8% 18%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 28px at 12% 16%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 18px at 16% 18%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(ellipse 102px 22px at 68% 13%, var(--mcky-v6-cloud) 92%, transparent 100%),
+    radial-gradient(circle 24px at 62% 12%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 32px at 68% 9%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 22px at 74% 12%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(ellipse 60px 16px at 42% 29%, var(--mcky-v6-cloud) 92%, transparent 100%),
+    radial-gradient(circle 15px at 39% 27%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 22px at 43% 25%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 15px at 47% 27%, var(--mcky-v6-cloud) 98%, transparent 100%);
+  background-repeat: no-repeat;
+  animation: mcky-v6-scenery-drift 16s var(--mcky-v6-ease-in-out) infinite alternate;
+}
+
+/* Stars sit on their own layer so only the lights twinkle, not the whole sky. */
+.mcky-v6-scenery::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-image:
+    radial-gradient(circle 2px at 7% 9%, var(--mcky-v6-scenery-star) 98%, transparent 100%),
+    radial-gradient(circle 1.5px at 18% 18%, var(--mcky-v6-scenery-star) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 29% 7%, var(--mcky-v6-scenery-star) 98%, transparent 100%),
+    radial-gradient(circle 1.5px at 41% 15%, var(--mcky-v6-scenery-star) 98%, transparent 100%),
+    radial-gradient(circle 3px at 53% 6%, var(--mcky-v6-scenery-star) 98%, transparent 100%),
+    radial-gradient(circle 1.5px at 64% 21%, var(--mcky-v6-scenery-star) 98%, transparent 100%),
+    radial-gradient(circle 2px at 76% 10%, var(--mcky-v6-scenery-star) 98%, transparent 100%),
+    radial-gradient(circle 1.5px at 87% 19%, var(--mcky-v6-scenery-star) 98%, transparent 100%),
+    radial-gradient(circle 2px at 94% 8%, var(--mcky-v6-scenery-star) 98%, transparent 100%),
+    radial-gradient(circle 1.5px at 12% 32%, var(--mcky-v6-scenery-star) 98%, transparent 100%),
+    radial-gradient(circle 2px at 59% 34%, var(--mcky-v6-scenery-star) 98%, transparent 100%),
+    radial-gradient(circle 1.5px at 82% 39%, var(--mcky-v6-scenery-star) 98%, transparent 100%);
+  background-repeat: no-repeat;
+}
+
+/* Horizon: two soft hills over a meadow strip in the day theme. */
+.mcky-v6-scenery::after {
+  content: '';
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -1px;
+  height: clamp(150px, 24vh, 250px);
+  background:
+    radial-gradient(ellipse 58% 105% at 24% 128%, var(--mcky-v6-scenery-hill) 98%, transparent 100%),
+    radial-gradient(ellipse 62% 95% at 80% 138%, var(--mcky-v6-scenery-hill-alt) 98%, transparent 100%),
+    linear-gradient(to top, var(--mcky-v6-scenery-meadow) 0 26px, transparent 26px);
+}
+
+/* Keep interactive content above the fixed backdrop. */
+.mcky-v6-scenery-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ *
+ * Night: moon, stars and a lit skyline.
+ * ------------------------------------------------------------------ */
+
+:is(:root[data-v6-mode='dark'], :root[data-mode='dark']) .mcky-v6-scenery,
+.mcky-v6-scenery[data-v6-mode='dark'] {
+  background-image:
+    radial-gradient(circle 30px at 84% 13%, var(--mcky-v6-scenery-moon) 98%, transparent 100%),
+    radial-gradient(circle 27px at 86% 11%, var(--mcky-v6-sky) 98%, transparent 100%),
+    radial-gradient(ellipse 78px 18px at 12% 20%, var(--mcky-v6-cloud) 92%, transparent 100%),
+    radial-gradient(circle 20px at 8% 18%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 28px at 12% 16%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 18px at 16% 18%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(ellipse 102px 22px at 68% 13%, var(--mcky-v6-cloud) 92%, transparent 100%),
+    radial-gradient(circle 24px at 62% 12%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 32px at 68% 9%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 22px at 74% 12%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(ellipse 60px 16px at 42% 29%, var(--mcky-v6-cloud) 92%, transparent 100%),
+    radial-gradient(circle 15px at 39% 27%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 22px at 43% 25%, var(--mcky-v6-cloud) 98%, transparent 100%),
+    radial-gradient(circle 15px at 47% 27%, var(--mcky-v6-cloud) 98%, transparent 100%);
+  animation: mcky-v6-scenery-drift-night 16s var(--mcky-v6-ease-in-out) infinite alternate;
+}
+
+:is(:root[data-v6-mode='dark'], :root[data-mode='dark']) .mcky-v6-scenery::before,
+.mcky-v6-scenery[data-v6-mode='dark']::before {
+  opacity: 1;
+  animation: mcky-v6-scenery-twinkle 3.4s var(--mcky-v6-ease-in-out) infinite;
+}
+
+:is(:root[data-v6-mode='dark'], :root[data-mode='dark']) .mcky-v6-scenery::after,
+.mcky-v6-scenery[data-v6-mode='dark']::after {
+  height: clamp(180px, 32vh, 300px);
+  background-color: var(--mcky-v6-scenery-city);
+  background-image:
+    radial-gradient(circle 2.5px at 9% 40%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 17% 72%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 19% 84%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 25% 50%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 27% 62%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 32% 30%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 35% 44%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 34% 58%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 41% 68%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 44% 80%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 49% 44%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 51% 58%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 57% 76%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 59% 88%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 65% 36%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 68% 50%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 66% 64%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 73% 58%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 76% 70%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 80% 28%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 83% 42%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 81% 56%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 88% 70%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 91% 82%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 96% 48%, var(--mcky-v6-scenery-window) 98%, transparent 100%),
+    radial-gradient(circle 2.5px at 98% 62%, var(--mcky-v6-scenery-window) 98%, transparent 100%);
+  clip-path: polygon(
+    0 52%, 7% 52%, 7% 28%, 14% 28%, 14% 60%, 22% 60%, 22% 38%,
+    30% 38%, 30% 18%, 38% 18%, 38% 55%, 46% 55%, 46% 32%, 54% 32%,
+    54% 64%, 62% 64%, 62% 24%, 70% 24%, 70% 46%, 78% 46%, 78% 15%,
+    86% 15%, 86% 58%, 93% 58%, 93% 34%, 100% 34%, 100% 100%, 0 100%
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Keyframes — only the lights and cloud layer move.
+ * ------------------------------------------------------------------ */
+
+@keyframes mcky-v6-scenery-drift {
+  from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+  to { background-position: 0 0, 26px -14px, 26px -14px, 26px -14px, 26px -14px, -22px -10px, -22px -10px, -22px -10px, -22px -10px, 14px -8px, 14px -8px, 14px -8px, 14px -8px; }
+}
+
+@keyframes mcky-v6-scenery-drift-night {
+  from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+  to { background-position: 0 0, 0 0, 26px -14px, 26px -14px, 26px -14px, 26px -14px, -22px -10px, -22px -10px, -22px -10px, -22px -10px, 14px -8px, 14px -8px, 14px -8px, 14px -8px; }
+}
+
+@keyframes mcky-v6-scenery-twinkle {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mcky-v6-scenery,
+  .mcky-v6-scenery::before {
+    animation: none !important;
+  }
+}
