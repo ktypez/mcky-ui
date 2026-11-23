@@ -1,6 +1,8 @@
 /* MCKY UI V6 — Work Shell foundation. V5 remains available and unchanged. */
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700;800&display=swap');
+@import './v6-theme.css';
 @import './v6-motion.css';
+@import './v6-scenery.css';
 
 :root {
   --mcky-v6-sky: #9DD2F7;
@@ -22,6 +24,21 @@
   --mcky-v6-outline: 2.5px solid var(--mcky-v6-ink);
   --mcky-v6-shadow: 5px 5px 0 var(--mcky-v6-ink);
   --mcky-v6-shadow-sm: 3px 3px 0 var(--mcky-v6-ink);
+
+  /* Contrast + overlays */
+  --mcky-v6-on-accent: #111111;
+  --mcky-v6-overlay: rgba(157, 210, 247, 0.85);
+
+  /* Day scenery */
+  --mcky-v6-scenery-sun: #FFD21F;
+  --mcky-v6-scenery-hill: #8CCB7A;
+  --mcky-v6-scenery-hill-alt: #69B45F;
+  --mcky-v6-scenery-meadow: #3F8447;
+  --mcky-v6-scenery-star: #FFF6D8;
+  --mcky-v6-scenery-moon: #F6EFD2;
+  --mcky-v6-scenery-city: #16203C;
+  --mcky-v6-scenery-city-edge: #42557F;
+  --mcky-v6-scenery-window: #FFD84D;
 }
 
 .mcky-v6-shell {
@@ -47,7 +64,7 @@
 .mcky-v6-button {
   min-height: 40px;
   padding: 9px 14px;
-  color: var(--mcky-v6-ink);
+  color: var(--mcky-v6-on-accent);
   background: var(--mcky-v6-yellow);
   border: var(--mcky-v6-outline);
   border-radius: var(--mcky-v6-radius-sm);

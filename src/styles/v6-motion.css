@@ -343,7 +343,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(157, 210, 247, 0.85);
+  background: var(--mcky-v6-overlay);
   overscroll-behavior: contain;
 }
 .mcky-v6-overlay > * { animation: mcky-v6-pop-in var(--mcky-v6-dur) var(--mcky-v6-ease) both; }

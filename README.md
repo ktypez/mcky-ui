@@ -3,7 +3,7 @@
 Shared UI foundation for the mcky.space application family.
 
 - **V5 Paper Pop** remains available and unchanged through `@mcky/ui/core.css` and the existing Svelte component exports.
-- **V6 Work Shell** is introduced as an opt-in foundation through `@mcky/ui/v6.css`. It provides the sky-blue / warm-cream / yellow palette, Space Grotesk / Sarabun / DM Mono typography, ink outlines, rounded surfaces, hard offset shadows, and — from 0.4.0 — the motion/decoration layer.
+- **V6 Work Shell** is introduced as an opt-in foundation through `@mcky/ui/v6.css`. It provides the sky-blue / warm-cream / yellow palette, Space Grotesk / Sarabun / DM Mono typography, ink outlines, rounded surfaces, hard offset shadows, the motion/decoration layer (0.4.0), and light/dark themes with an animated day/night backdrop (0.5.0).
 
 ## Install
 
@@ -55,6 +55,33 @@ toasts, staged entrances and confetti.
 
 Motion is opt-in per class and every movement is neutralised under
 `prefers-reduced-motion: reduce`. See [V6.md](./V6.md) for the full spec.
+
+### V6 light/dark and scenery
+
+V6 stays light until an app opts in. Set `data-v6-mode="dark"` on `<html>` (or
+use the V5-compatible `data-mode="dark"`), or let the helper resolve `auto`
+from the OS and persist the choice:
+
+```ts
+import { applyV6Mode, setV6Mode } from '@mcky/ui/theme';
+applyV6Mode();                 // resolves the stored preference (default: auto)
+setV6Mode('dark');             // persists to localStorage as mcky-v6-mode
+```
+
+For Svelte apps, `<ModeToggle />` from `@mcky/ui/mode-toggle` is a ready-made
+accessible button. The night palette is its own twilight ramp, not an inversion
+of day: indigo surfaces, warm white ink and gold accents with AA contrast.
+
+Add the animated backdrop with zero markup:
+
+```html
+<div class="mcky-v6-scenery" aria-hidden="true"></div>
+<main class="mcky-v6-scenery-content">…</main>
+```
+
+Day paints Attendance-style clouds over a meadow; night paints twinkling stars,
+a crescent moon and a lit skyline. Clouds drift and stars twinkle, and both stop
+under `prefers-reduced-motion: reduce`.
 
 V6 is opt-in and does not change existing V5 consumers. The consuming application owns theme persistence, routing, authentication, and application-specific behavior.
 

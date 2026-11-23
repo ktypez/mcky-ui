@@ -1,5 +1,6 @@
 <script lang="ts">
   import { burstConfetti, withoutTransitions } from '../src/lib/motion';
+  import ModeToggle from '../src/lib/components/ModeToggle.svelte';
 
   let replay = $state(0);
   let modal = $state(false);
@@ -38,10 +39,12 @@
   }
 </script>
 
-<main class="board">
+<div class="mcky-v6-scenery" aria-hidden="true"></div>
+
+<main class="board mcky-v6-scenery-content">
   <header class="topbar">
     <span class="brand"><span class="brand-mark">m<span>.</span></span> mcky-ui · V6</span>
-    <span class="topbar-meta"><span class="mcky-v6-dot-live"></span> MOTION FOUNDATION</span>
+    <span class="topbar-meta"><span class="mcky-v6-dot-live"></span> MOTION FOUNDATION <ModeToggle /></span>
   </header>
 
   <section class="mcky-v6-canvas hero">
@@ -144,9 +147,10 @@
 </div>
 
 <style>
+  :global(html) { background: var(--mcky-v6-sky); }
   :global(body) {
     margin: 0;
-    background: var(--mcky-v6-sky);
+    background: transparent;
     color: var(--mcky-v6-ink);
     font-family: var(--mcky-v6-font-body);
   }
@@ -161,7 +165,7 @@
   .hero-eyebrow { max-width: 320px; }
   .hero h1 { margin: 16px 0 12px; font: 700 clamp(34px, 5vw, 54px) / 0.98 var(--mcky-v6-font-display); letter-spacing: -0.06em; }
   .hero h1 span { color: #fff; text-shadow: 1.5px 1.5px var(--mcky-v6-ink), -1px -1px var(--mcky-v6-ink), 1px -1px var(--mcky-v6-ink), -1px 1px var(--mcky-v6-ink); }
-  .hero p { max-width: 520px; margin: 0; font-size: 13px; line-height: 1.75; color: #2c2c2c; }
+  .hero p { max-width: 520px; margin: 0; font-size: 13px; line-height: 1.75; color: var(--mcky-v6-muted); }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
   .hero-art { position: relative; height: 240px; display: grid; place-items: center; }
   .orbit-one { width: 245px; height: 160px; transform: rotate(-24deg); }
@@ -176,14 +180,14 @@
   .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
   .panel { padding: 16px; display: flex; flex-direction: column; gap: 13px; }
   .row { display: flex; flex-wrap: wrap; gap: 9px; }
-  .ghost { background: var(--mcky-v6-paper); }
+  .ghost { background: var(--mcky-v6-cream); color: var(--mcky-v6-ink); }
   .icon { min-width: 40px; padding-inline: 12px; }
-  .hint { margin: 0; font-size: 11.5px; line-height: 1.65; color: #4a4a4a; }
-  code { font-family: var(--mcky-v6-font-mono); font-size: 10.5px; background: var(--mcky-v6-cream); border: 1px solid rgba(17, 17, 17, 0.18); border-radius: 5px; padding: 1px 4px; }
+  .hint { margin: 0; font-size: 11.5px; line-height: 1.65; color: var(--mcky-v6-muted); }
+  code { font-family: var(--mcky-v6-font-mono); font-size: 10.5px; background: var(--mcky-v6-cream); border: 1px solid var(--mcky-v6-muted); border-radius: 5px; padding: 1px 4px; }
   .status-row { align-items: center; gap: 14px; }
   .status { display: inline-flex; align-items: center; gap: 7px; font: 500 9.5px var(--mcky-v6-font-mono); letter-spacing: 0.06em; }
-  .skeleton { display: flex; flex-direction: column; gap: 10px; padding: 14px; border: 1.5px solid rgba(17, 17, 17, 0.25); border-radius: var(--mcky-v6-radius-sm); background: var(--mcky-v6-cream); }
-  .skeleton-line { height: 12px; border-radius: 4px; background: rgba(17, 17, 17, 0.12); }
+  .skeleton { display: flex; flex-direction: column; gap: 10px; padding: 14px; border: 1.5px solid var(--mcky-v6-muted); border-radius: var(--mcky-v6-radius-sm); background: var(--mcky-v6-cream); }
+  .skeleton-line { height: 12px; border-radius: 4px; background: var(--mcky-v6-muted); opacity: 0.35; }
   .skeleton-line.wide { width: 68%; }
   .skeleton-line.narrow { width: 38%; }
   .stagger { display: flex; flex-wrap: wrap; gap: 7px; }
@@ -197,9 +201,9 @@
   .deco-badge { padding: 7px 11px; border: 1.5px solid var(--mcky-v6-ink); border-radius: 9px; background: var(--mcky-v6-yellow); font: 700 10px var(--mcky-v6-font-mono); }
   .modal { width: min(420px, 100%); padding: 22px; display: flex; flex-direction: column; gap: 12px; text-align: left; }
   .modal h2 { margin: 0; font: 700 22px var(--mcky-v6-font-display); letter-spacing: -0.03em; }
-  .modal p { margin: 0; font-size: 12.5px; line-height: 1.7; color: #4a4a4a; }
+  .modal p { margin: 0; font-size: 12.5px; line-height: 1.7; color: var(--mcky-v6-muted); }
   .modal .mcky-v6-button { align-self: flex-start; }
-  .foot { display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 22px; font: 500 9.5px var(--mcky-v6-font-mono); letter-spacing: 0.1em; color: #333; }
+  .foot { display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 22px; font: 500 9.5px var(--mcky-v6-font-mono); letter-spacing: 0.1em; color: var(--mcky-v6-subtle); }
   @media (max-width: 780px) {
     .hero { grid-template-columns: 1fr; padding: 24px 20px; }
     .hero-art { height: 200px; }
