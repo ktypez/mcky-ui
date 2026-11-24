@@ -23,3 +23,9 @@ Each note follows the same shape:
 
 Snapshots under `references/<project>/` are copies of the exact files the shared
 components were ported from. They are references, not additional source files.
+
+Apps whose CSP allows only self-hosted fonts should import `@mcky/ui/v6-base.css`
+rather than `@mcky/ui/v6.css`: same tokens/theme/motion/primitives, without the
+Google Fonts `@import`. Portal, Truck, data, Dashboard and vaultctl web pin
+`d208f00`; mem web cannot pin a package and hand-ports the same scenery into its
+Go HTML string.

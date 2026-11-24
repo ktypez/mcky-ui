@@ -8,48 +8,56 @@ Source: `/home/admin/projects/data-ledger`. Deploy is manual
 
 ## V6 entry
 
-**None.** `src/index.css` imports `tailwindcss`, `@mcky/ui/core.css`,
-`./styles/v5-tokens.css`, `./styles/v5-ui.css` and
-`./styles/workspace-layout.css`. There are no V6 imports or `v6-*` tokens in
-active code. Shared components are `@mcky/ui/button` and
-`@mcky/ui/count-sticker` through local adapters.
+Fully migrated to V6 in PR #56. `src/index.css` imports `tailwindcss`,
+`@mcky/ui/core.css` (for shared V5 component adapters) and `@mcky/ui/v6-base.css`
+(font-free canonical tokens), followed by `./styles/v6-tokens.css`,
+`./styles/v5-ui.css` and `./styles/workspace-layout.css`. Google Fonts links were
+removed in favour of the V6 stack. Shared components are `@mcky/ui/button`,
+`@mcky/ui/count-sticker` and `@mcky/ui/mode-toggle`.
 
-Pin: `5a72d95` / 0.2.0, a pre-V6 package containing only `core.css`,
-`tokens.css` and `v5-tokens.css`.
+Pin: `d208f00` / 0.5.0 in `package.json`, `package-lock.json` and
+`pnpm-lock.yaml`. npm is canonical despite the stale pnpm lock; bump both.
 
 ## Token overrides
 
-Local `v5-tokens.css` aliases shared V5 tokens (`--background`, `--primary`,
-`--border`, radius/font aliases). Canonical palette values (matcha `#158068`,
-paper `#f6f2e9`, ink `#28251d`) come from the pinned shared `v5-tokens.css`.
-`index.css` maps them into Tailwind `@theme inline`; `v5-ui.css`,
-`workspace-layout.css` and `AppDialog.css` contain the visible skin.
+`src/styles/v6-tokens.css` aliases the app's semantic names (`--paper`, `--ink`,
+`--acc`, `--rule`, `--card`, tint/credit/penpay accents) onto canonical
+`--mcky-v6-*` tokens, so the existing component CSS keeps working while the
+twilight ramp owns dark mode. `index.css` still maps them into Tailwind
+`@theme inline`. `v5-tokens.css` remains only as a compatibility alias.
 
 ## Theme
 
-No V6 mode. `index.html:33-65` boots `data-theme`, `data-palette`
-(matcha/coral/blueberry/butter), `data-mode`, `data-density`, `data-texture`
-and `color-scheme` before paint; `app-theme.ts:162-212` mirrors and persists
-those attributes and dispatches `app-theme-change`.
+`data-ledger-mode` is still the canonical persisted key (including `auto`);
+`data-v6-mode` is mirrored on `<html>` in the pre-paint `index.html` boot and in
+`app-theme.ts`. TopBar uses the shared Thai-labelled `ModeToggle`; the shared
+`mcky-v6-mode` key is intentionally removed after each toggle so there is only
+one source of truth. Settings still supports `auto`.
 
 ## Scenery
 
-Dotted "ledger paper" backdrop from `body::before` in `v5-ui.css:19-30`, with a
-`data-texture="off"` opt-out. No sky canvas, no clouds/meadow/stars/city.
+`<Scenery />` is mounted once in `src/App.svelte`; routed content sits inside
+`.mcky-v6-scenery-content` and `<main>` remains the scroller. The old dotted
+ledger-paper `body::before` backdrop is gone. Palette switching and routing were
+verified with the backdrop present.
 
 ## Apply checklist
 
-- **Do not apply V6 here without an explicit migration.** `tests/v5-design-system.test.ts`
-  forbids `v6-` naming in active layout, requires the `core.css` import and
-  asserts the adapters contain no hardcoded palette hex.
-- Changing shared V5 token values changes every palette here at once.
+- `tests/v6-design-system.test.ts` asserts the V6 import, token aliases, scenery
+  mount and content wrapper. `tests/v5-design-system.test.ts` was rewritten to
+  enforce the V6 contracts; keep both passing rather than deleting coverage.
 - Any new mode attribute must be added to the pre-paint boot in `index.html`
   *and* `app-theme.ts`, or the first paint flashes.
-- npm is canonical despite the stale `pnpm-lock.yaml`; bump package and lock
-  together.
+- Keep the shared key out of storage — `data-ledger-mode` stays canonical.
+- `scripts/health-check.mjs` now contains the CDP browser check plus a curl
+  fallback; run it after any token or theme change.
 
 ## Verification
 
-`npm run test:run`, `npm run lint`, `npm run build:full`, `npm run check:pwa`,
-`node scripts/health-check.mjs`, `npm run measure:perf`. Deploy check compares
-the built `index-*.js` hash with the custom domain.
+`npm run test:run` (144 tests), `npm run lint`, `npm run build:full`,
+`npm run check:pwa`, `node scripts/health-check.mjs`, `npm run measure:perf`.
+Health check covers day 3 clouds / 3 ridges, night 12 stars / 10 buildings /
+29 lit windows, zero console errors, zero overflow at 1440/390, palette and
+routing behavior.
+
+Applied in PR: https://github.com/ktypez/data.mcky.space/pull/56
