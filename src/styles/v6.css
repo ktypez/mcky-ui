@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700;800&display=swap');
 @import './v6-theme.css';
 @import './v6-motion.css';
-@import './v6-scenery.css';
 
 :root {
   --mcky-v6-sky: #9DD2F7;
@@ -72,6 +71,8 @@
   font: 700 0.8rem var(--mcky-v6-font-display);
 }
 .mcky-v6-button:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--mcky-v6-ink); }
+/* Content sits above the fixed <Scenery /> layer mounted as a body sibling. */
+.mcky-v6-scenery-content { position: relative; z-index: 1; }
 .mcky-v6-label {
   font: 500 0.68rem var(--mcky-v6-font-mono);
   letter-spacing: 0.13em;

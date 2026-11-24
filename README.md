@@ -72,18 +72,26 @@ For Svelte apps, `<ModeToggle />` from `@mcky/ui/mode-toggle` is a ready-made
 accessible button. The night palette is its own twilight ramp, not an inversion
 of day: indigo surfaces, warm white ink and gold accents with AA contrast.
 
-Add the animated backdrop with zero markup:
+Render the shared `<Scenery />` component once as a sibling of the app root:
 
-```html
-<div class="mcky-v6-scenery" aria-hidden="true"></div>
+```svelte
+<script>
+  import Scenery from '@mcky/ui/scenery';
+</script>
+
+<Scenery />
 <main class="mcky-v6-scenery-content">…</main>
 ```
 
-Day paints Attendance-style clouds over a meadow; night paints twinkling stars,
-a crescent moon and a lit skyline. Clouds drift and stars twinkle, and both stop
-under `prefers-reduced-motion: reduce`.
+It is the same view the Portal uses: day paints Attendance-style ☁️ clouds over
+hills, trees and a meadow; night paints 12 twinkling stars, a crescent moon and
+a lit city skyline. Pass `mode="dark"` to pin a view, or let it follow the shared
+V6 mode. Every loop stops under `prefers-reduced-motion: reduce`.
 
-V6 is opt-in and does not change existing V5 consumers. The consuming application owns theme persistence, routing, authentication, and application-specific behavior.
+Before applying V6 changes to a consumer app, check [`references/`](./references/README.md)
+for that app's pin, local overrides, theme key and apply checklist. V6 is opt-in
+and does not change existing V5 consumers. The consuming application owns theme
+persistence, routing, authentication, and application-specific behavior.
 
 ## Development and verification
 

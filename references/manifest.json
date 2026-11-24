@@ -1,0 +1,80 @@
+{
+  "updated": "2026-11-24",
+  "canonical": {
+    "library": "@mcky/ui",
+    "version": "0.5.0",
+    "css": ["src/styles/v6.css", "src/styles/v6-theme.css", "src/styles/v6-motion.css"],
+    "components": ["src/lib/components/Scenery.svelte", "src/lib/components/ModeToggle.svelte"],
+    "themeAttribute": "data-v6-mode",
+    "storageKey": "mcky-v6-mode"
+  },
+  "projects": [
+    {
+      "id": "portal",
+      "name": "Portal (me.mcky.space)",
+      "note": "portal/README.md",
+      "source": "/home/admin/projects/portal",
+      "url": "https://me.mcky.space",
+      "pin": "813eca1 (0.4.0)",
+      "snapshots": [
+        "portal/scenery.snapshot.svelte",
+        "portal/mode-toggle.snapshot.svelte",
+        "portal/v6-tokens.snapshot.css"
+      ]
+    },
+    {
+      "id": "truck",
+      "name": "Truck (truck.mcky.space)",
+      "note": "truck/README.md",
+      "source": "/home/admin/projects/truck",
+      "url": "https://truck.mcky.space",
+      "pin": "71827ea (0.5.0)",
+      "snapshots": []
+    },
+    {
+      "id": "data",
+      "name": "Data (data.mcky.space)",
+      "note": "data/README.md",
+      "source": "/home/admin/projects/data-ledger",
+      "url": "https://data.mcky.space",
+      "pin": "5a72d95 (0.2.0, V5 only)",
+      "snapshots": []
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard (local :80)",
+      "note": "dashboard/README.md",
+      "source": "/home/admin/projects/dashboard",
+      "url": "http://127.0.0.1/",
+      "pin": "none (vendored 0.3.0 tokens)",
+      "snapshots": []
+    },
+    {
+      "id": "work-shell",
+      "name": "Work Shell (work.mcky.space)",
+      "note": "work-shell/README.md",
+      "source": "/home/admin/projects/work-shell",
+      "url": "https://work.mcky.space",
+      "pin": "c7a3561 (0.3.0)",
+      "snapshots": []
+    },
+    {
+      "id": "mem-web",
+      "name": "mem wiki web",
+      "note": "mem-web/README.md",
+      "source": "/home/admin/projects/mem",
+      "url": "http://127.0.0.1:3200",
+      "pin": "none (Go raw-string UI)",
+      "snapshots": []
+    },
+    {
+      "id": "vaultctl-web",
+      "name": "vaultctl web",
+      "note": "vaultctl-web/README.md",
+      "source": "/home/admin/projects/vaultctl/vaultctl/web",
+      "url": "http://192.168.1.47:8788",
+      "pin": "none (vendored V6 tokens)",
+      "snapshots": []
+    }
+  ]
+}
