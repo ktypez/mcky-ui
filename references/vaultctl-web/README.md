@@ -2,46 +2,70 @@
 
 ## Stack
 
-Svelte 5 + Vite SPA at `/home/admin/projects/vaultctl/vaultctl/web`, served by
-`vaultweb.service` on `192.168.1.47:8788` through `serve.py`. The CSP is
-`default-src 'self'`, so webfonts must be local.
-Source: `/home/admin/projects/vaultctl/vaultctl/web`.
+Svelte 5 + Vite SPA at `/home/admin/projects/vaultctl/vaultctl/web`, no
+`@mcky/ui` dependency. Served by `vaultweb.service` via `serve.py` on
+`http://192.168.1.47:8788` (LAN host is required; loopback refuses). `serve.py`
+serves `dist/` and same-origin proxies `/api/*`. CSP `default-src 'self'` is why
+fonts are local.
+
+**Important:** the V6 work in this checkout is still **uncommitted** (modified
+`README.md`, `SPEC.md`, `index.html`, `src/App.svelte`, `src/app.css`, plus
+untracked `public/fonts/`). Never overwrite it from a shared apply.
 
 ## V6 entry
 
-`src/app.css` was rewritten to V6 tokens: sky `#9DD2F7` dotted canvas, cream
-`#F8F6F0` window shell, 2.5px ink outlines, 5px/3px hard shadows, 20px radius
-and yellow `#FFD21F` CTAs. `src/App.svelte` wraps the UI in `.desk > .shell` with
-window dots. No `@mcky/ui` npm pin is involved; the token layer is local.
+`index.html:12` → `src/main.js:1-7` imports `./app.css` and mounts `App.svelte`.
+`app.css` (877 lines) is a vendored V6 skin: header `:1-6`, 8 self-hosted
+`@font-face` rules `:7-15`, token block `:17-61`, dark overrides `:63-86`,
+body/dots `:88-102`, desk/shell `:106-124`, components `:125-841`, responsive
+and reduced motion `:842-877`. `public/fonts/v6-fonts.css` is an unimported
+duplicate artifact.
 
 ## Token overrides
 
-The app uses a **palette-free single blue accent** instead of the full V6 accent
-family. Space Grotesk / Sarabun / DM Mono are self-hosted under `public/fonts/`
-because the CSP blocks font CDNs. Colors and geometry are duplicated in
-`app.css`, so canonical token changes do not propagate automatically.
+`--v6-*` names plus `--sans` / `--mono` aliases (`app.css:18-53`), local-only
+`--v6-cream-2`, `--v6-muted`, `--v6-faint`, `--v6-rule`, `*-tint`, and a single
+blue accent `--acc:#1f4fd8` / `--acc-ink:#ffffff`. Canonical `--mcky-v6-subtle`,
+`--on-accent`, `--overlay` and scenery tokens are absent.
+
+Dark is the same charcoal ramp as mem (`#20252b` / `#242a30` / `#2e353c`),
+`#ffd21f` yellow, `--acc:#9db9ff`, shadow `#0b0d10` (`:63-86`), not canonical
+indigo/gold. Hardcoded `#111111`, `#0b0d10`, `rgb(17 17 17/.9)` remain in
+selection, toasts, rows, modal backdrop and shell shadow.
 
 ## Theme
 
-The UI has its own light/dark toggle in `App.svelte` with local persistence.
-There is no `data-v6-mode` / `mcky-v6-mode` key. Migrating to the shared helper
-must preserve the user's stored preference and the toggle label.
+JS-driven: `theme = $state('light')` (`App.svelte:8`), `applyTheme()` sets
+`data-theme` on `<html>` and persists to `localStorage['theme']` (`:56-60`),
+`toggleTheme()` flips (`:61-63`), topbar button at `:263`. `onMount()` reads the
+stored key else `matchMedia('(prefers-color-scheme: dark)')` (`:232-238`) —
+first paint can flash for dark-OS visitors. CSS only reacts to
+`html[data-theme='dark']`. No `data-mode` / `data-v6-mode`, no `mcky-v6-mode`.
+`index.html:7` keeps a static `theme-color="#9dd2f7"`.
 
 ## Scenery
 
-Dotted sky canvas and window shell only; no shared `<Scenery />` component, no
-clouds/meadow/stars/city.
+Static dotted canvas (`app.css:90-102`), `.desk` / `.shell` without positioning
+(`:107-111`). Decorations are markup stickers (`.auth-stamp`, `.auth-floater`,
+`.squiggle`, `.seal-graphic`, etc.). No shared scenery. A fixed layer would
+cover `.desk` without `.mcky-v6-scenery-content`, and must coexist with sticky
+topbar z-index 100, modal 200 and toast 300.
 
 ## Apply checklist
 
-- Keep the self-hosted fonts and `'self'` CSP; never reintroduce the Google
-  Fonts `@import` from canonical `v6.css`.
-- Tokenise the local blue-accent overrides before switching to canonical
-  accent tokens, or the palette-free look is lost.
-- Preserve the existing dark preference when introducing `data-v6-mode`.
+- Importing `v6.css` alone restyles nothing (token names differ) and re-adds the
+  blocked Google Fonts import; keep self-hosted fonts.
+- Canonical theme only reads `data-v6-mode` / `data-mode`; this app only writes
+  `data-theme`. Adding the shared helper creates a second source of truth and
+  changes the dark-OS default. Migrate both together.
+- Reconcile charcoal literals and the single blue accent before adopting the
+  indigo/night ramp; preserve the uncommitted V6 work and untracked fonts.
+- Add the content z-index wrapper before any fixed scenery layer, and keep the
+  existing Svelte transitions and reduced-motion rule (`:875-877`).
+- `vaultweb.service` binds the LAN IP, not loopback.
 
 ## Verification
 
-Previously verified live at `192.168.1.47:8788`: axe-core 0 violations, zero
-horizontal overflow at 1440/1024/768/390, 8 webfonts loaded. Re-run the SPA
-check/build and a browser pass after any token change.
+`npm ci && npm run build`, `systemctl is-active vaultweb.service`, then curl
+`/`, `/api/status` and a font file on `http://192.168.1.47:8788`. Browser:
+axe-core 0 violations, overflowX=0 at 1440/1024/768/390, 8 webfonts loaded.
