@@ -4,53 +4,54 @@
 
 SvelteKit 2 + Svelte 5 + Vite 6, `@sveltejs/adapter-node`, pnpm. Served by
 `dashboard.service` on port 80; dev port 8123. Source:
-`/home/admin/projects/dashboard`. No public hostname was found.
+`/home/admin/projects/dashboard`. No public hostname was found. **This directory
+is not a git repo**, so changes there are not versioned.
 
 ## V6 entry
 
-**No package dependency.** All CSS is in one scoped `<style>` block in
-`src/routes/+page.svelte:475-1371`. A comment at `:476-480` says the token
-layer mirrors `@mcky/ui/v6.css` **0.3.0** and should be replaced by an import
-once the package is added. `src/app.html` loads Google Fonts directly.
+`package.json` now depends on `@mcky/ui` pinned to `d208f00` / 0.5.0.
+`src/app.css` imports `@mcky/ui/v6-base.css` (font-free; `app.html` loads fonts
+itself) and is loaded from the new `src/routes/+layout.svelte`. The frozen 0.3.0
+`:global(:root)` token block was removed from `+page.svelte`.
 
 ## Token overrides
 
-`src/routes/+page.svelte:481-510` defines `:global(:root)` tokens with the
-canonical 0.3.0 values (sky `#9dd2f7`, cream `#f8f6f0`, paper `#ffffff`, ink
-`#111111`, yellow `#ffd21f`, blue `#4d83ff`, 20px/12px radii, 2.5px outline,
-5px/3px shadows). Local-only extras: `--mcky-v6-sky-deep`,
-`--mcky-v6-cream-deep`, `--mcky-v6-*-tint`, `--mcky-v6-rule`,
-`--mcky-v6-shell-shadow`. Canonical 0.5.0 tokens such as `--success`,
-`--on-accent`, `--overlay`, decoration tokens and scenery tokens are absent.
-
-Sparkline colors are hardcoded (`rgba(77,131,255,…)`, `#4D83FF`, `#FFD21F`,
-`#111111` around `:124-153`).
+`src/app.css` keeps only local-only values, all derived from canonical tokens
+with `color-mix()`: `--mcky-v6-sky-deep`, `--mcky-v6-cream-deep`,
+`--mcky-v6-*-tint`, `--mcky-v6-rule`, `--mcky-v6-shadow-deep`,
+`--mcky-v6-shell-shadow`. No duplicate canonical hex remains. Solid accent
+surfaces use `--mcky-v6-on-accent`. Sparkline canvas colours are read from
+computed canonical tokens at paint time.
 
 ## Theme
 
-Light-only. `app.html:6-7` hardcodes `color-scheme=light` and
-`theme-color=#9DD2F7`; no `data-mode` / `data-v6-mode`, no toggle, no dark
-ramp. Because the tokens are local `:global(:root)` declarations, shared dark
-tokens would be overridden even if an attribute were set.
+`+layout.svelte` mounts `<ModeToggle />` and calls `applyV6Mode()` /
+`onV6ModeChange()` from `@mcky/ui/theme`; preference persists under
+`mcky-v6-mode`. `theme-color` is mirrored from the computed
+`--mcky-v6-sky` on mount (there is a brief pre-hydration gap in SSR HTML).
+The canonical indigo/gold night ramp now applies to the whole dashboard.
 
 ## Scenery
 
-Flat sky plus a local radial dot grid on `.desk` (`:542-549`) and cream window
-shell `.shell` (`:551-560`). No shared scenery element.
+`<Scenery />` is mounted in `+layout.svelte` with all page content inside
+`.mcky-v6-scenery-content` (relative z-index 1). The sticky titlebar still
+sticks after scrolling; the fixed backdrop is z-index 0. The old flat sky and
+radial dot grid were removed.
 
 ## Apply checklist
 
-- Removing the frozen token block without adding `@mcky/ui/v6.css` breaks every
-  color.
-- Adding the import alone will not apply 0.5.0 values while the local
-  `:global(:root)` block remains; migrate local-only names first.
-- Do not make the shared theme auto-follow the OS for this app: it has no dark
-  styles for its local tints/shadows.
-- Geometry (22px-ish frames, 4-6px shadows) is duplicated literally across many
-  classes; token changes need a coordinated edit.
+- Always edit `src/app.css` for local-only tokens; do not reintroduce canonical
+  hex values into `+page.svelte`.
+- Keep the content wrapper in the layout — without it the opaque sky covers the
+  dashboard.
+- The local favicon silences a pre-existing `/favicon.ico` 404.
+- `dashboard.service` was not restarted by the apply; restart it to serve the
+  fresh build.
 
 ## Verification
 
-No test script. `pnpm build`, then `PORT=8123 node build/index.js` or restart
-`dashboard.service`; check `curl http://127.0.0.1/api/stats` and the page at
-`:80`.
+`pnpm install --frozen-lockfile`, `pnpm build` (no `check` script;
+`pnpm exec tsc --noEmit` has pre-existing unrelated route errors). Browser check
+against `PORT=8123 node build/index.js`: day 3 clouds / 3 ridges / 2 trees;
+night 12 stars / 10 buildings / 29 lit windows; min text contrast 6.95:1 day /
+6.68:1 night; no overflow at 1440/390; no console errors; toggle persists.

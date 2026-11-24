@@ -28,7 +28,7 @@
       "note": "truck/README.md",
       "source": "/home/admin/projects/truck",
       "url": "https://truck.mcky.space",
-      "pin": "71827ea (0.5.0)",
+      "pin": "d208f00 (0.5.0, shared scenery)",
       "snapshots": []
     },
     {
@@ -37,7 +37,7 @@
       "note": "data/README.md",
       "source": "/home/admin/projects/data-ledger",
       "url": "https://data.mcky.space",
-      "pin": "5a72d95 (0.2.0, V5 only)",
+      "pin": "d208f00 (0.5.0, full V6 migration)",
       "snapshots": []
     },
     {
@@ -46,7 +46,7 @@
       "note": "dashboard/README.md",
       "source": "/home/admin/projects/dashboard",
       "url": "http://127.0.0.1/",
-      "pin": "none (vendored 0.3.0 tokens)",
+      "pin": "d208f00 (0.5.0, local :80 service)",
       "snapshots": []
     },
     {
@@ -64,7 +64,7 @@
       "note": "mem-web/README.md",
       "source": "/home/admin/projects/mem",
       "url": "http://127.0.0.1:3200",
-      "pin": "none (Go raw-string UI)",
+      "pin": "none (Go raw-string UI, ported from d208f00)",
       "snapshots": []
     },
     {
@@ -73,7 +73,7 @@
       "note": "vaultctl-web/README.md",
       "source": "/home/admin/projects/vaultctl/vaultctl/web",
       "url": "http://192.168.1.47:8788",
-      "pin": "none (vendored V6 tokens)",
+      "pin": "d208f00 (0.5.0, shared scenery)",
       "snapshots": []
     }
   ]

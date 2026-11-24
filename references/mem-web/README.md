@@ -3,65 +3,65 @@
 ## Stack
 
 One Go binary, no frontend build step. The whole page is the raw-string
-`uiHTML` in `/home/admin/projects/mem/ui.go:9-454`, served with nonce
-substitution by `handleUI()` (`:456-463`). Loopback
-`http://127.0.0.1:3200` via user service `memory.service`; optional plaintext
-LAN forward on `192.168.1.47:3200` via `mem-lan.socket` / `mem-lan.service`.
+`uiHTML` in `/home/admin/projects/mem/ui.go`, served with nonce substitution by
+`handleUI()`. `http://127.0.0.1:3200` via the **system** unit `memory.service`
+(optional plaintext LAN forward on `192.168.1.47:3200` via `mem-lan.socket`).
 Source: `/home/admin/projects/mem`.
 
 ## V6 entry
 
-No npm dependency, no `@mcky/ui` import, no pin. Tokens are hand-copied into
-`ui.go:36-56` under `--v6-*` names. Fonts are `go:embed`-ed woff2 subsets
-(`fonts.go:10-33`, `fonts/*.woff2`, 8 files ~114 KiB), served at `/ui/fonts/`
-and declared with `@font-face` at `ui.go:26-34`. CSP in `auth.go:171-181` is
-`default-src 'none'`, `font-src 'self'`, nonce-gated scripts; UI and fonts are
-behind HTTP Basic auth (`auth.go:119-130`).
+No npm dependency — the painted scenery and canonical token values were
+hand-ported into the Go HTML string. The source comment cites mcky-ui
+`d208f00` / 0.5.0. Fonts are `go:embed` woff2 subsets served at `/ui/fonts/`.
+CSP in `auth.go` remains `default-src 'none'`, `font-src 'self'`, nonce-gated
+scripts; there is no Google Fonts import.
 
 ## Token overrides
 
-Renamed `--v6-*` tokens plus local-only `--v6-cream-2:#efece2`, `--v6-muted`,
-`--v6-faint`, `--v6-rule`, `*-tint`, `--acc*`, `--danger` (`ui.go:38-52`).
-Four user-selectable palettes: blue `#1f4fd8`, purple `#5a45c9`, orange
-`#b3540a`, yellow `#8a6100`, with dark variants (`:51-56`, `:67-69`).
-
-Dark is **neutral charcoal**, not canonical indigo: `#20252b` / `#242a30` /
-`#2e353c`, yellow stays `#ffd21f`, shadow `#0b0d10`, `--acc-ink:#111111`
-(`:59-65`). Hardcoded `#111111` / `#0b0d10` survives in selection, toast and
-dialog styles (`:82`, `:120-123`, `:220-227`).
+Canonical `--mcky-v6-*` values are used, with local aliases where the raw HTML
+needs them. Four user-selectable palettes remain (blue/purple/orange/yellow,
+persisted as `mem-palette`). The old neutral charcoal dark ramp
+(`#20252b` / `#242a30` / `#2e353c`) was replaced by the canonical twilight
+indigo/gold ramp (`#1b2440` / `#263354` / `#314066`, ink `#f4f1e8`, gold
+`#ffd84d`).
 
 ## Theme
 
-`<html lang="th" data-palette="blue" data-mode="auto">` is hardcoded at
-`ui.go:19`. Dark follows the OS purely via `@media (prefers-color-scheme: dark)`
-scoped to `:root[data-mode="auto"]` (`:57-70`); there is no toggle and no JS
-writes `data-mode`. The only persisted key is **`mem-palette`** (accent choice,
-`:416-417`, `:445-449`). No `data-v6-mode`, no `mcky-v6-mode`.
+The header has a three-state toggle `auto → light → dark` using nonce-gated
+inline JS and a small pre-paint script to avoid a flash. It persists `mem-mode`
+and sets `data-mode` plus mirrored `data-v6-mode` on `<html>` and updates
+`theme-color`. `auto` still follows `prefers-color-scheme: dark`. `mem-palette`
+remains a separate persisted setting; both survive reload.
 
 ## Scenery
 
-Static dotted canvas only: 24px radial dot grid on `body` with dark variant
-(`ui.go:73-81`). No clouds, meadow, stars, moon or skyline. `.desk` / `.shell`
-have no positioning, so a fixed scenery layer would cover them unless content
-gets `.mcky-v6-scenery-content`; check scrim/sidebar z-index 29/30 and
-`body { overflow: hidden; height: 100dvh }`.
+The shared `<Scenery />` cannot be consumed by a Go binary, so its markup, CSS,
+positions, sizes and animation delays were ported verbatim into the raw string
+under `.mcky-v6-scenery` (fixed z-index 0, pointer-events none). All UI markup
+now sits inside `.mcky-v6-scenery-content`. Day: 3 shaded clouds, diffused sun,
+3 ridges, 2 trees. Night: 12 breathing stars, haloed crescent, 6 hazy back
+buildings, 10 buildings / 29 lit windows, horizon glow. Reduced motion disables
+both loops. The old dotted body canvas was removed because the painted sky is
+opaque. Svelte-scoped selectors became rules nested under `.mcky-v6-scenery`.
 
 ## Apply checklist
 
-- Do not paste `v6.css` verbatim: its Google Fonts `@import` is blocked by the
-  CSP. Keep embedded fonts and `font-src 'self'`.
-- A token alias layer is required; `--mcky-v6-*` alone recolors nothing.
-- Shared dark tokens would not react to `data-mode="auto"` media queries; dark-OS
-  users would silently flip to light. Migrate the mode mechanism deliberately.
-- Maintain all four palette buttons; canonical V6 has no palette concept.
-- Keep the existing reduced-motion kill switch (`ui.go:250`) if adding loops.
-- Generic global classes (`.list`, `.item`, `.count`, `.actions`) can collide
-  with wholesale CSS pastes; Svelte scoping does not protect this app.
+- Keep embedded fonts and `font-src 'self'`; never paste `v6.css`'s Google
+  Fonts `@import` into the raw string.
+- When the shared scenery changes, port the data arrays and keyframes again —
+  there is no import to bump here.
+- Preserve all four palette buttons, `mem-palette`, the nonce-gated scripts and
+  the Basic auth/CSP setup.
+- Watch generic global selectors (`.list`, `.item`, `.count`, `.actions`) when
+  pasting styles; Svelte scoping does not protect this app.
 
 ## Verification
 
-`systemctl --user is-active memory.service`, `curl -fsS http://127.0.0.1:3200/health`,
-font URL returns 200 with Basic auth / 401 without, `go test ./...`,
-`go build ./...`. Browser: axe-core 0 violations, overflowX=0 at
-1440/1024/768/390, 8 webfonts loaded, internal pane scrolling intact, 0 console
-errors.
+`gofmt -w ui.go`, `go test ./...`, `go build ./...`, `git diff --check`,
+`systemctl is-active memory.service`, `curl -fsS http://127.0.0.1:3200/health`.
+Browser: day 3 clouds / 3 ridges / 2 trees, night 12 stars / 6 back buildings /
+10 buildings / 29 lit windows; toggle and four palettes persist; reduced motion
+stops animation; overflowX=0 at 1440/1024/768/390; no console errors; embedded
+fonts load.
+
+Applied in PR: https://github.com/ktypez/mem/pull/4
