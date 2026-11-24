@@ -83,10 +83,12 @@ Render the shared `<Scenery />` component once as a sibling of the app root:
 <main class="mcky-v6-scenery-content">…</main>
 ```
 
-It is the same view the Portal uses: day paints Attendance-style ☁️ clouds over
-hills, trees and a meadow; night paints 12 twinkling stars, a crescent moon and
-a lit city skyline. Pass `mode="dark"` to pin a view, or let it follow the shared
-V6 mode. Every loop stops under `prefers-reduced-motion: reduce`.
+It is the same painted view the Portal uses: day has soft layered clouds, three
+receding ridges, two trees and a grass-textured meadow; night has 12 gently
+breathing stars, a soft crescent moon, a hazy back skyline and 10 lit buildings.
+No emoji glyphs, triangle grass or heavy cartoon outlines. Pass `mode="night"`
+to pin a view, or let it follow the shared V6 mode. Every loop stops under
+`prefers-reduced-motion: reduce`.
 
 Before applying V6 changes to a consumer app, check [`references/`](./references/README.md)
 for that app's pin, local overrides, theme key and apply checklist. V6 is opt-in

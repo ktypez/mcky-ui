@@ -74,7 +74,7 @@ test('V6 scenery is the Portal view, kept in sync by a reference snapshot', asyn
   const portal = await read('../references/portal/scenery.snapshot.svelte');
 
   // Same cloud/star/skyline data, byte for byte, so the two views cannot drift.
-  for (const name of ['clouds', 'stars', 'buildings', 'grass']) {
+  for (const name of ['clouds', 'stars', 'skylineBack', 'buildings']) {
     const pattern = new RegExp(`const ${name} = \\[([^\\]]*)\\]`);
     const fromShared = shared.match(pattern)?.[1]?.replace(/\s+/g, ' ').trim();
     const fromPortal = portal.match(pattern)?.[1]?.replace(/\s+/g, ' ').trim();
@@ -83,23 +83,27 @@ test('V6 scenery is the Portal view, kept in sync by a reference snapshot', asyn
   }
 
   for (const marker of [
-    '☁️',
-    'class="star mcky-v6-twinkle"',
-    'class="cloud mcky-v6-float"',
-    'mcky-v6-float--delay',
-    'mcky-v6-float--slow',
+    'class="puff puff-a"',
+    '@keyframes scenery-cloud-drift',
+    'class="star"',
+    '@keyframes scenery-star-breathe',
     'class="moon"',
-    'class="night-hill"',
-    'tree-left',
-    'tree-right',
-    'class="tuft"',
+    'class="city-back"',
+    'class="building"',
     'class:lit={building.lit.includes(cell)}',
+    'class="ridge ridge-near"',
+    'class="meadow"',
     'pointer-events: none',
     '@media (prefers-reduced-motion: reduce)',
-    '.star { animation: none; }',
+    '.cloud, .stars .star { animation: none; }',
   ]) {
     assert.ok(shared.includes(marker), `missing Portal scenery marker: ${marker}`);
   }
+
+  // Painted depth instead of emoji glyphs, triangle grass or heavy ink outlines.
+  assert.doesNotMatch(shared, /☁️|class="tuft"|border: 2px solid var\(--/);
+  assert.match(shared, /linear-gradient\(180deg, #86c2ec/);
+  assert.match(shared, /linear-gradient\(180deg, #101a33/);
 
   assert.match(shared, /mode\?: 'day' \| 'night'/);
   assert.match(shared, /onV6ModeChange/);
