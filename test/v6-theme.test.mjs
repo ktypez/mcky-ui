@@ -18,13 +18,13 @@ function contrast(foreground, background) {
 test('V6 exposes the theme, scenery and mode-toggle entry points', async () => {
   const pkg = JSON.parse(await read('../package.json'));
   assert.equal(pkg.exports['./v6-theme.css'], './src/styles/v6-theme.css');
-  assert.equal(pkg.exports['./v6-scenery.css'], './src/styles/v6-scenery.css');
   assert.equal(pkg.exports['./theme'], './src/lib/theme.ts');
+  assert.equal(pkg.exports['./scenery'], './src/lib/components/Scenery.svelte');
   assert.equal(pkg.exports['./mode-toggle'], './src/lib/components/ModeToggle.svelte');
 
   const entry = await read('../src/styles/v6.css');
   assert.match(entry, /@import '\.\/v6-theme\.css'/);
-  assert.match(entry, /@import '\.\/v6-scenery\.css'/);
+  assert.match(entry, /\.mcky-v6-scenery-content/);
   assert.match(entry, /--mcky-v6-on-accent:\s*#111111/);
   assert.match(entry, /color: var\(--mcky-v6-on-accent\)/);
 });
@@ -69,21 +69,42 @@ test('V6 night palette keeps every text pair at WCAG AA or better', async () => 
   assert.ok(contrast(outline, paper) >= 3, 'card outline needs 3:1 against the card');
 });
 
-test('V6 scenery paints an animated day meadow and a night city', async () => {
-  const css = await read('../src/styles/v6-scenery.css');
-  for (const selector of ['.mcky-v6-scenery', '.mcky-v6-scenery-content', '.mcky-v6-scenery::before', '.mcky-v6-scenery::after']) {
-    assert.ok(css.includes(selector), `missing ${selector}`);
+test('V6 scenery is the Portal view, kept in sync by a reference snapshot', async () => {
+  const shared = await read('../src/lib/components/Scenery.svelte');
+  const portal = await read('../references/portal/scenery.snapshot.svelte');
+
+  // Same cloud/star/skyline data, byte for byte, so the two views cannot drift.
+  for (const name of ['clouds', 'stars', 'buildings', 'grass']) {
+    const pattern = new RegExp(`const ${name} = \\[([^\\]]*)\\]`);
+    const fromShared = shared.match(pattern)?.[1]?.replace(/\s+/g, ' ').trim();
+    const fromPortal = portal.match(pattern)?.[1]?.replace(/\s+/g, ' ').trim();
+    assert.ok(fromShared, `shared scenery is missing ${name}`);
+    assert.equal(fromShared, fromPortal, `${name} drifted from the Portal reference`);
   }
-  for (const keyframe of ['mcky-v6-scenery-drift', 'mcky-v6-scenery-drift-night', 'mcky-v6-scenery-twinkle']) {
-    assert.match(css, new RegExp(`@keyframes ${keyframe}\\b`), `missing @keyframes ${keyframe}`);
+
+  for (const marker of [
+    '☁️',
+    'class="star mcky-v6-twinkle"',
+    'class="cloud mcky-v6-float"',
+    'mcky-v6-float--delay',
+    'mcky-v6-float--slow',
+    'class="moon"',
+    'class="night-hill"',
+    'tree-left',
+    'tree-right',
+    'class="tuft"',
+    'class:lit={building.lit.includes(cell)}',
+    'pointer-events: none',
+    '@media (prefers-reduced-motion: reduce)',
+    '.star { animation: none; }',
+  ]) {
+    assert.ok(shared.includes(marker), `missing Portal scenery marker: ${marker}`);
   }
-  assert.match(css, /:is\(:root\[data-v6-mode='dark'\], :root\[data-mode='dark'\]\) \.mcky-v6-scenery/);
-  assert.match(css, /\.mcky-v6-scenery\[data-v6-mode='dark'\]/);
-  assert.match(css, /clip-path: polygon\(/);
-  assert.match(css, /var\(--mcky-v6-scenery-window\)/);
-  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
-  assert.match(css, /animation: none !important/);
-  assert.match(css, /pointer-events: none/);
+
+  assert.match(shared, /mode\?: 'day' \| 'night'/);
+  assert.match(shared, /onV6ModeChange/);
+  // The shared copy uses canonical V6 token names where Portal used its alias.
+  assert.doesNotMatch(shared, /var\(--ink\)/);
 });
 
 test('V6 theme helper is dependency-free, persistent and system-aware', async () => {
@@ -107,12 +128,19 @@ test('V6 theme helper is dependency-free, persistent and system-aware', async ()
   assert.doesNotMatch(ts, /from ['"]svelte/);
 });
 
-test('V6 mode toggle is an accessible, icon-library-free control', async () => {
+test('V6 mode toggle matches the Portal control without an icon dependency', async () => {
   const component = await read('../src/lib/components/ModeToggle.svelte');
+  const portal = await read('../references/portal/mode-toggle.snapshot.svelte');
   assert.match(component, /type="button"/);
-  assert.match(component, /aria-label=\{mode === 'dark'/);
-  assert.match(component, /aria-pressed=\{mode === 'dark'\}/);
+  assert.match(component, /aria-label=\{night \?/);
+  assert.match(component, /aria-pressed=\{night\}/);
   assert.match(component, /onclick=\{toggleV6Mode\}/);
   assert.match(component, /mcky-v6-press/);
+  assert.match(component, /<svg aria-hidden="true" width="18" height="18"/);
   assert.doesNotMatch(component, /phosphor|lucide|canvas-confetti/);
+  // Same Thai labels and pressed semantics as the Portal button.
+  for (const label of ['เปลี่ยนเป็นโหมดกลางคืน', 'เปลี่ยนเป็นโหมดกลางวัน', 'โหมดกลางคืน', 'โหมดกลางวัน']) {
+    assert.ok(component.includes(label), `missing Portal label ${label}`);
+    assert.ok(portal.includes(label), `Portal reference lost label ${label}`);
+  }
 });

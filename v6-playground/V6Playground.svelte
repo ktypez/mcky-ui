@@ -1,5 +1,6 @@
 <script lang="ts">
   import { burstConfetti, withoutTransitions } from '../src/lib/motion';
+  import Scenery from '../src/lib/components/Scenery.svelte';
   import ModeToggle from '../src/lib/components/ModeToggle.svelte';
 
   let replay = $state(0);
@@ -39,7 +40,7 @@
   }
 </script>
 
-<div class="mcky-v6-scenery" aria-hidden="true"></div>
+<Scenery />
 
 <main class="board mcky-v6-scenery-content">
   <header class="topbar">

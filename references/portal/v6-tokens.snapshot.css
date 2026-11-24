@@ -1,0 +1,179 @@
+/* Portal compatibility adapter for MCKY UI V6.
+ *
+ * The canonical V6 tokens, primitives and motion layer come from
+ * `@mcky/ui/v6.css` (imported first in main.ts). This file only maps the
+ * legacy Portal/Clerk variable names still used by component styles onto
+ * V6 semantics, and overrides the font stacks to the app's self-hosted
+ * @fontsource faces so no font CDN is required.
+ */
+:root {
+  color-scheme: light;
+
+  /* Self-hosted V6 typography. */
+  --font-display: 'Space Grotesk', 'Sarabun', system-ui, sans-serif;
+  --font-ui: 'Sarabun', system-ui, sans-serif;
+  --font-sans: var(--font-ui);
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+  --mcky-v6-font-display: var(--font-display);
+  --mcky-v6-font-body: var(--font-ui);
+  --mcky-v6-font-mono: var(--font-mono);
+
+  /* Surfaces: sky page, cream window, white cards. */
+  --sky: var(--mcky-v6-sky);
+  --cream: var(--mcky-v6-cream);
+  --paper: var(--mcky-v6-cream);
+  --paper-2: #f1ede2;
+  --card: var(--mcky-v6-paper);
+  --ink: var(--mcky-v6-ink);
+  --hard: var(--mcky-v6-ink);
+  --ink-soft: var(--mcky-v6-muted);
+  --ink-faint: var(--mcky-v6-subtle);
+  --rule: rgba(17, 17, 17, 0.18);
+  --rule-2: rgba(17, 17, 17, 0.32);
+  --border-w: 2.5px;
+  --r2: 12px;
+  --r3: 18px;
+  --r4: 22px;
+  --pad-card: 16px;
+  --rowh: 56px;
+  --shadow-pop: 3px 3px 0 var(--ink);
+  --sh-sm: 3px 3px 0 var(--ink);
+  --ring: var(--mcky-v6-blue);
+  --ui-bg-subtle: var(--mcky-v6-cream);
+
+  /* Accents. */
+  --acc: var(--mcky-v6-yellow);
+  --acc-strong: #f2be00;
+  --on-accent: #111111;
+  --acc-ink: var(--ink);
+  --acc-tint: #fff4c2;
+  --credit: var(--mcky-v6-blue);
+  --credit-ink: #2249b8;
+  --credit-tint: #e4edff;
+  --pop: var(--mcky-v6-purple);
+  --pop-ink: #4b35a6;
+  --pop-tint: #eee9ff;
+  --penpay: var(--mcky-v6-orange);
+  --penpay-ink: #9e470b;
+  --penpay-tint: #ffe9d8;
+  --danger: var(--mcky-v6-red);
+  --danger-ink: #a52a26;
+  --danger-tint: #ffe5e1;
+  --pin: var(--mcky-v6-blue);
+  --pin-color: var(--mcky-v6-blue);
+
+  /* Generic names used by Clerk helpers and shared primitives. */
+  --background: var(--mcky-v6-sky);
+  --foreground: var(--ink);
+  --card-foreground: var(--ink);
+  --popover: var(--card);
+  --popover-foreground: var(--ink);
+  --primary: var(--acc);
+  --primary-foreground: var(--ink);
+  --secondary: var(--cream);
+  --secondary-foreground: var(--ink);
+  --muted: var(--cream);
+  --muted-foreground: var(--ink-soft);
+  --accent: var(--mcky-v6-blue);
+  --accent-foreground: var(--ink);
+  --destructive: var(--danger);
+  --destructive-foreground: var(--ink);
+  --success: #3dd6a3;
+  --success-foreground: var(--ink);
+  --warning: var(--mcky-v6-orange);
+  --warning-foreground: var(--ink);
+  --info: var(--mcky-v6-blue);
+  --info-foreground: var(--ink);
+  --border: var(--rule);
+  --input: var(--rule-2);
+
+  /* Spec/permission tile vocabulary. */
+  --spec-bg: var(--card);
+  --spec-surface: var(--card);
+  --spec-border: var(--rule);
+  --spec-text: var(--ink);
+  --spec-text-muted: var(--ink-soft);
+  --spec-track: var(--paper-2);
+  --spec-accent: var(--mcky-v6-blue);
+  --spec-accent-soft: var(--credit-tint);
+  --tile-t0-bg: var(--acc-tint);
+  --tile-t0-fg: var(--acc-ink);
+  --tile-t1-bg: var(--credit-tint);
+  --tile-t1-fg: var(--credit-ink);
+  --tile-t2-bg: var(--pop-tint);
+  --tile-t2-fg: var(--pop-ink);
+  --tile-t3-bg: var(--penpay-tint);
+  --tile-t3-fg: var(--penpay-ink);
+  --theme-font-display: var(--font-display);
+  --theme-font-body: var(--font-ui);
+  --theme-font-mono: var(--font-mono);
+}
+
+/* Night mode — a twilight palette of its own, not an inversion of the day
+ * theme. Mid-tone indigo surfaces keep text and borders legible, while the
+ * gold/blue/violet accents carry the lit-city feeling. Every text pair below
+ * is >= 4.5:1 on the surface it actually renders on (see the contrast test). */
+:root[data-portal-mode='night'] {
+  --mcky-v6-sky: #1b2440;
+  --mcky-v6-cream: #263354;
+  --mcky-v6-paper: #314066;
+  --mcky-v6-ink: #f4f1e8;
+  --mcky-v6-muted: #c9d4ec;
+  --mcky-v6-subtle: #a6b5d6;
+  --mcky-v6-yellow: #ffd84d;
+  --mcky-v6-blue: #9ec1ff;
+  --mcky-v6-purple: #c9b8ff;
+  --mcky-v6-orange: #ffb77e;
+  --mcky-v6-red: #ff9a92;
+  --mcky-v6-outline: 2.5px solid #b9c8ea;
+  --mcky-v6-shadow: 5px 5px 0 #101a30;
+  --mcky-v6-shadow-sm: 3px 3px 0 #101a30;
+  --mcky-v6-shadow-hover: 8px 8px 0 #101a30;
+
+  --sky: var(--mcky-v6-sky);
+  --cream: var(--mcky-v6-cream);
+  --paper: var(--mcky-v6-cream);
+  --paper-2: #3b4b75;
+  --card: var(--mcky-v6-paper);
+  --ink: #f4f1e8;
+  --hard: #101a30;
+  --ink-soft: #c9d4ec;
+  --ink-faint: #a6b5d6;
+  --rule: rgba(244, 241, 232, 0.28);
+  --rule-2: rgba(244, 241, 232, 0.44);
+  --accent: var(--mcky-v6-yellow);
+  --on-accent: #1b2440;
+  --accent-ink: var(--on-accent);
+  --acc-ink: #ffe9a8;
+  --acc-tint: #56461f;
+  --credit: var(--mcky-v6-blue);
+  --credit-ink: #e7f0ff;
+  --credit-tint: #3b5689;
+  --pop: var(--mcky-v6-purple);
+  --pop-ink: #f0eaff;
+  --pop-tint: #4b407e;
+  --penpay: var(--mcky-v6-orange);
+  --penpay-ink: #ffe6cc;
+  --penpay-tint: #66432e;
+  --danger: var(--mcky-v6-red);
+  --danger-ink: #ffe3e0;
+  --danger-tint: #6b3a3f;
+  --success: #7fe3b8;
+  --success-foreground: #1b2440;
+  --background: var(--mcky-v6-sky);
+  --foreground: var(--ink);
+  --secondary: var(--cream);
+  --secondary-foreground: var(--ink);
+  --muted: var(--cream);
+  --muted-foreground: var(--ink-soft);
+  --border: var(--rule);
+  --input: var(--rule-2);
+  --spec-text: var(--ink);
+  --spec-text-muted: var(--ink-soft);
+  --spec-bg: var(--card);
+  --spec-surface: var(--card);
+  --tile-t0-fg: var(--acc-ink);
+  --tile-t1-fg: var(--credit-ink);
+  --tile-t2-fg: var(--pop-ink);
+  --tile-t3-fg: var(--penpay-ink);
+}
