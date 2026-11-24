@@ -7,11 +7,17 @@ const read = (path) => readFile(new URL(path, import.meta.url), 'utf8');
 test('V6 entry exposes the motion layer', async () => {
   const pkg = JSON.parse(await read('../package.json'));
   assert.equal(pkg.exports['./v6.css'], './src/styles/v6.css');
+  assert.equal(pkg.exports['./v6-base.css'], './src/styles/v6-base.css');
   assert.equal(pkg.exports['./v6-motion.css'], './src/styles/v6-motion.css');
   assert.equal(pkg.exports['./motion'], './src/lib/motion.ts');
 
   const entry = await read('../src/styles/v6.css');
-  assert.match(entry, /@import '\.\/v6-motion\.css'/);
+  assert.match(entry, /fonts\.googleapis\.com/);
+  assert.match(entry, /@import '\.\/v6-base\.css'/);
+  const base = await read('../src/styles/v6-base.css');
+  assert.doesNotMatch(base, /fonts\.googleapis\.com/);
+  assert.match(base, /@import '\.\/v6-theme\.css'/);
+  assert.match(base, /@import '\.\/v6-motion\.css'/);
 });
 
 test('V6 motion tokens cover duration, easing and interaction geometry', async () => {
