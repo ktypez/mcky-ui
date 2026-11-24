@@ -45,8 +45,9 @@ silently disappears.
 ## Scenery
 
 `src/components/PortalScenery.svelte`, mounted once as a fixed sibling before
-`#app` in `main.ts`. Day = three ☁️ glyphs, sun, two hills, two trees, nine
-tufts; night = 12 twinkling stars, crescent moon, 10 buildings / 29 lit windows.
+`#app` in `main.ts`. Day = three painted clouds, diffused sun, three ridges,
+two trees, textured meadow; night = 12 breathing stars, soft crescent, six hazy
+back buildings, 10 foreground buildings / 29 lit windows.
 Snapshots of this component, the toggle and the night tokens are in this
 directory; the shared `Scenery` / `ModeToggle` were ported from them.
 
