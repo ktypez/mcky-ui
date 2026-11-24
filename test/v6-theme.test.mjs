@@ -22,7 +22,7 @@ test('V6 exposes the theme, scenery and mode-toggle entry points', async () => {
   assert.equal(pkg.exports['./scenery'], './src/lib/components/Scenery.svelte');
   assert.equal(pkg.exports['./mode-toggle'], './src/lib/components/ModeToggle.svelte');
 
-  const entry = await read('../src/styles/v6.css');
+  const entry = await read('../src/styles/v6-base.css');
   assert.match(entry, /@import '\.\/v6-theme\.css'/);
   assert.match(entry, /\.mcky-v6-scenery-content/);
   assert.match(entry, /--mcky-v6-on-accent:\s*#111111/);

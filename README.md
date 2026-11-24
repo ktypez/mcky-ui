@@ -26,7 +26,9 @@ Existing Svelte components remain available from `@mcky/ui/svelte`.
 Import the new V6 tokens and primitive classes:
 
 ```css
-@import '@mcky/ui/v6.css';
+@import '@mcky/ui/v6.css';            /* bundled font import */
+/* or, when the app self-hosts fonts and CSP blocks remote stylesheets: */
+@import '@mcky/ui/v6-base.css';       /* same tokens/theme/motion, no font import */
 ```
 
 Available tokens include:

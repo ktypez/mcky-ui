@@ -10,6 +10,7 @@
     "./svelte": "./src/lib/index.ts",
     "./v5-tokens.css": "./src/styles/v5-tokens.css",
     "./v6.css": "./src/styles/v6.css",
+    "./v6-base.css": "./src/styles/v6-base.css",
     "./v6-motion.css": "./src/styles/v6-motion.css",
     "./v6-theme.css": "./src/styles/v6-theme.css",
     "./motion": "./src/lib/motion.ts",
